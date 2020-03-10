@@ -1,6 +1,6 @@
-class Vol:
+import math
 
-    import math
+class Vol:
     
     #2 attributs : pricing et time_utility
     #pricing = Dico de chaque vol qui contient sa politique de prix pour les sièges restants. 
@@ -9,12 +9,19 @@ class Vol:
     #time_utility = fonction chameau pour l'utilité horaire commune à tous les clients et 
     #qui dépend uniquement de l'heure du vol
 
-    def init(self):
+    def init(self,t,n):
+        #Caractéristiques intrinsèques du vol: horaire et nombre de sieges total disponibles
+        self.departure_time = t #en heures, en base 10
+        self.seats = n #Type int
+
         self.pricing = {}
-        self.time_utility = 5 + math.cos(self.time-8) - (self.time-8)*math.cos(self.time-8)
+        self.time_utility = 5 + math.cos(self.departure_time-8) - (self.departure_time-8)*math.cos(self.departure_time-8)
+
+        #Vecteur des prix des places déjà vendues
+        self.sold = []
 
     #Methode pour créer un pricing pour un vol
-    #arguments : k le nombres de classes sur ce vol, lp la liste des k prix
+    #arguments : k le nombres de classes sur ce vol, lp la liste des k prix par ordre croissant
     
     def new_pricing(self, k, lp):
         n = self.seats[0]//k #le nombre de places qu'on va pouvoir allouer à chaque classe
@@ -38,3 +45,6 @@ class Vol:
 #Après chaque client on va décrementer le dictionnaire du  nombre de places restantes et on va augmenter 
 # sold du nombre de places vendues, et à la fin de la journée on met à jour le pricing à partir de 
 # l'ancien dico pour le redéfinir à partir des places restantes e fin de journée
+
+    def proposal(self):
+        return self.pricing[0][0]
