@@ -6,14 +6,14 @@ from Client import *
 
 #Definition des horaires des vols
 
-class time:
+class Time:
 
     def init(self,h,m):
-        self.hours=h
-        self.minutes=m
+        self.hours=h+m/60
+        self.minutes=h*60+m
 
-    def convert_to_hour(self):
-        return self.hours+self.minutes/60
+#Exemple d'instance pour l'horaire: 12h30
+t1 = Time(12,30)
 
 
 def utility(C,V):

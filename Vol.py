@@ -19,7 +19,7 @@ class Vol:
 
         self.pricing = {}
 
-        self.time_utility = time_preference(t)
+        self.time_utility = time_preference(t.hours)
 
         #Vecteur des prix des places déjà vendues
         self.sold = []
