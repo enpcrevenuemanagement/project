@@ -12,8 +12,10 @@ class Time:
         self.hours=h+m/60
         self.minutes=h*60+m
 
-#Exemple d'instance pour l'horaire: 12h30
-t1 = Time(12,30)
+#Exemple d'instances pour l'horaire:
+t1 = Time(8,30) #8h30
+t1 = Time(12,30) #12h30
+
 
 
 def utility(C,V):
