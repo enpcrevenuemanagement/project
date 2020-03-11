@@ -1,5 +1,8 @@
 import math
 
+#Fonction chameau
+time_preference = lambda x : 5 + math.cos(x-8) - (x-8)*math.cos(x-8)
+
 class Vol:
     
     #2 attributs : pricing et time_utility
@@ -15,7 +18,8 @@ class Vol:
         self.seats = n #Type int
 
         self.pricing = {}
-        self.time_utility = 5 + math.cos(self.departure_time-8) - (self.departure_time-8)*math.cos(self.departure_time-8)
+
+        self.time_utility = time_preference(t)
 
         #Vecteur des prix des places déjà vendues
         self.sold = []
