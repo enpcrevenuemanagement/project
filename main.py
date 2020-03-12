@@ -19,6 +19,6 @@ t1 = Time(12,30) #12h30
 
 
 def utility(C,V):
-    """fonction qui définit l'utilité du vol V pour le client C
+    """fonction qui définit l'utilité du vol V pour le client C selon son jour d'arrivée
     fonction scalaire linéaire au prix et non linéaire en fonction de l'heure du vol"""
     return C.alpha + V.time_utility + C.erreur #le terme p(i,j) manque

@@ -4,6 +4,10 @@
 
 import numpy
 
+a0 = 1
+k = 0.1
+alpha = lambda d : a0 - k*d
+
 class Client:
     def __init__(self):
         """3 attributs à la classe Client : 
@@ -11,10 +15,10 @@ class Client:
             day le jour d'arrivée, qui est le nombre de jours avant le vol
             erreur qui est le bruit de la fonction utilité, dépend uniquement 
             du temps et mais pas du client et du vol """
-        self.alpha = -1 #valeur prise arbitrairement, la sensibilité 
-        #décroit avec le temps
         self.day = numpy.random.randint(1,10) #on se place pour l'instant sur 
         #un horizon de 10 jours et on tire aléatoirement le jour d'arrivée
+        self.alpha = alpha(self.day) #valeur prise arbitrairement, la sensibilité 
+        #décroit avec le temps
         self.erreur = 0
     
     
