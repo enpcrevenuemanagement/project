@@ -1,9 +1,10 @@
 import math
 
+time_preference = lambda x : (5 + math.cos(x-8) - (x-8)*math.cos(x-8))/12.3507
+
 class Vol:
 
 #Fonction chameau
-time_preference = lambda x : (5 + math.cos(x-8) - (x-8)*math.cos(x-8))/12.3507
     
     #2 attributs : pricing et time_utility
     #pricing = Dico de chaque vol qui contient sa politique de prix pour les sièges restants. 
@@ -55,4 +56,7 @@ time_preference = lambda x : (5 + math.cos(x-8) - (x-8)*math.cos(x-8))/12.3507
         for k in range(len(self.pricing)):
             if self.pricing[k][1] > 0:
                 return self.pricing[k][0]  
+
+    def profit(self):
+        return sum(self.sold)
 
