@@ -40,7 +40,7 @@ time_preference = lambda x : (5 + math.cos(x-8) - (x-8)*math.cos(x-8))/12.3507
 
     def maj_pricing(self, k, lp):
         nb = 0 #nombre de places restantes sur le vol 
-        for d in self.pricing:
+        for d in self.pricing.values():
             nb += d[1]
         n = nb//k
         for i in range(k): #ajout du nombre de place dans chaque classe au prix correspondant lp[k] 
@@ -51,5 +51,8 @@ time_preference = lambda x : (5 + math.cos(x-8) - (x-8)*math.cos(x-8))/12.3507
 # sold du nombre de places vendues, et à la fin de la journée on met à jour le pricing à partir de 
 # l'ancien dico pour le redéfinir à partir des places restantes e fin de journée
 
-    def proposal(self):
-        return self.pricing[0][0]
+    def proposal(self):     #fonction qui fait une proposition de prix au client
+        for k in range(len(self.pricing)):
+            if self.pricing[k][1] > 0:
+                return self.pricing[k][0]  
+
