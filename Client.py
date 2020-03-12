@@ -24,13 +24,11 @@ class Client:
     
     def gumbel(self):
         """Donne à l'erreur du client une valeur aléatoire selon une loi de 
-        Gumbel de paramètre 0 et 10-self.day
+        Gumbel de paramètre 0 et 1
         0 est le paramètre de position
         10-self.day est le paramètre d'étalement
         l'erreur dépend uniquement du temps"""
-        self.erreur = numpy.random.gumbel(0, 11-self.day) #l'erreur est 
-        #d'autant plus grande que le vol est dans longtemps (i.e d'autant 
-        #plus que  day est petit) 
+        self.erreur = numpy.random.gumbel(0, 1)
 
 
     
