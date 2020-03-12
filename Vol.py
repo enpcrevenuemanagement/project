@@ -1,7 +1,7 @@
 import math
 
 #Fonction chameau
-time_preference = lambda x : 5 + math.cos(x-8) - (x-8)*math.cos(x-8)
+time_preference = lambda x : (5 + math.cos(x-8) - (x-8)*math.cos(x-8))/12.3507
 
 class Vol:
     
