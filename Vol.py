@@ -2,57 +2,37 @@ import math
 
 class Vol:
 
-#Fonction chameau
-time_preference = lambda x : (5 + math.cos(x-8) - (x-8)*math.cos(x-8))/12.3507
+    #Fonction chameau, le 12.3507 sert à normer. 
+    time_preference = lambda x : (5 + math.cos(x-8) - (x-8)*math.cos(x-8))/12.3507
     
-    #2 attributs : pricing et time_utility
-    #pricing = Dico de chaque vol qui contient sa politique de prix pour les sièges restants. 
-    #Chaque clé correspond à une classe de prix k, et à chaque classe de prix on associe le doublet 
-    #(prix des places de cette classe, nombre de places restantes à vendre dans cette classe)
     #time_utility = fonction chameau pour l'utilité horaire commune à tous les clients et 
     #qui dépend uniquement de l'heure du vol
 
     def init(self,t,n):
-        #Caractéristiques intrinsèques du vol: horaire et nombre de sieges total disponibles
         self.departure_time = t #en heures, en base 10
         self.seats = n #Type int
-
-        self.pricing = {}
-
+        self.pricing = []
         self.time_utility = time_preference(t.hours)
-
-
-        #Vecteur des prix des places déjà vendues
         self.sold = []
-
-    #Methode pour créer un pricing pour un vol
-    #arguments : k le nombres de classes sur ce vol, lp la liste des k prix par ordre croissant
+ 
+    #Au début on initialise toutes les places avec le même prix p (pas d'interet de les segmenter vu qu'on met à jour à chaque fois)
     
-    def new_pricing(self, k, lp):
-        n = self.seats[0]//k #le nombre de places qu'on va pouvoir allouer à chaque classe
-        for i in range(k): #ajout du nombre de place dans chaque classe au prix correspondant lp[k] 
-            self.pricing[i] = [lp[i], n]
-        self.pricing[0] = [lp[0], n+ self.seats%k] #et le reste va dans la catégorie 0
+    def new_pricing(self, p):
+        for i in range(self.seats):  
+            self.pricing[i] = p
+ 
+    #Méthode pour mettre à jour un pricing de vol, lorsque une place a été vendue après un client  
+    #on supprime la place vendue de la liste, on l'ajoute dans sold au prix ou elle a été vendue
+    #on met à jour au nouveau prix de vente x le pricing avec une place de moins dans l'avion
 
-    #Méthode pour mettre à jour un pricing de vol, lorsque des places ont été vendues (à la fin de la journée): 
-    #on récupère l'ancien dictionnaire et on en recrée un nouveau
-    #on peut choisir pour ce nouveau pricing le nombre de classes k et les nouveaux prix à attribuer  
-
-    def maj_pricing(self, k, lp):
-        nb = 0 #nombre de places restantes sur le vol 
-        for d in self.pricing.values():
-            nb += d[1]
-        n = nb//k
-        for i in range(k): #ajout du nombre de place dans chaque classe au prix correspondant lp[k] 
-            self.pricing[i] = [lp[i], n]
-        self.pricing[0] = [lp[0], n+ nb%k] #et le reste va dans la catégorie 0
-
-#Après chaque client on va décrementer le dictionnaire du  nombre de places restantes et on va augmenter 
-# sold du nombre de places vendues, et à la fin de la journée on met à jour le pricing à partir de 
-# l'ancien dico pour le redéfinir à partir des places restantes e fin de journée
-
-    def proposal(self):     #fonction qui fait une proposition de prix au client
+    def maj_pricing(self, x):
+        self.sold.append(self.pricing.pop([0]))
         for k in range(len(self.pricing)):
-            if self.pricing[k][1] > 0:
-                return self.pricing[k][0]  
+            self.pricing[k] = x
+ 
+    def proposal(self):     #fonction qui fait une proposition de prix au client, on lui propose la première place s'il en reste.
+        if len(self.pricing) > 0:
+            return self.pricing[0]
 
+    def benef(self): #calcule le bénéfice sur le vol (somme de toutes les places vendues)
+        return sum(self.sold)

@@ -3,6 +3,8 @@
 
 from  Vol import *
 from Client import *
+import numpy 
+hugeNumber = float("inf") 
 
 #Definition des horaires des vols
 
@@ -24,20 +26,23 @@ def utility(C,V):
     return C.alpha + V.time_utility + C.erreur #le terme p(i,j) manque
 
 
+
+
 #template 
 
-import numpy 
-hugeNumber = float("inf") 
-
 #Initialize all needed parameters and data 
-stages = number of stages 
-f = numpy.zeros([stages + 2, (highest-numbered state) + 1]) 
-x = numpy.zeros([stages + 1, (highest-numbered state) + 1]) 
+stages = 3 #nombre de stages
+highest_numbered_state =  #taille du plus grand état = nombres de places dans les vols x nombre de vols
+f = numpy.zeros([stages + 2, highest_numbered_state + 1]) 
+x = numpy.zeros([stages + 1, highest_numbered_state + 1]) 
+
 
 #If not zero, set each f[stages+1,i] to the terminal value of being in state i at the end For forbidden terminal states, use hugenumber for minimization, -hugenumber for maximization 
+vols_de_la_journée = liste de 1 à 4 vols 
+states = [vol_k.sold] for vol_k in vols_de_la_journée 
 
 for t in range(stages,0,-1) : 
-    for i in (possible states) : 
+    for i in (states) : 
     #Determine set of decisions d which are possible in this stage/state combination value = -hugeNumber if maximizing or hugenumber if minimizing 
         for d in (set of allowed decisions d) : 
         #Compute rewards/costs that are not random 
