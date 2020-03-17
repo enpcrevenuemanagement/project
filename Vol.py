@@ -1,9 +1,9 @@
 import math
 
+time_preference = lambda x : (5 + math.cos(x-8) - (x-8)*math.cos(x-8))/12.3507
+
 class Vol:
 
-    #Fonction chameau, le 12.3507 sert à normer. 
-    time_preference = lambda x : (5 + math.cos(x-8) - (x-8)*math.cos(x-8))/12.3507
     
     #time_utility = fonction chameau pour l'utilité horaire commune à tous les clients et 
     #qui dépend uniquement de l'heure du vol
@@ -29,10 +29,7 @@ class Vol:
         self.sold.append(self.pricing.pop([0]))
         for k in range(len(self.pricing)):
             self.pricing[k] = x
- 
-    def proposal(self):     #fonction qui fait une proposition de prix au client, on lui propose la première place s'il en reste.
-        if len(self.pricing) > 0:
-            return self.pricing[0]
 
-    def benef(self): #calcule le bénéfice sur le vol (somme de toutes les places vendues)
+    def profit(self):
         return sum(self.sold)
+
