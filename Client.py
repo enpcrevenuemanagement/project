@@ -9,17 +9,15 @@ k = 0.1
 alpha = lambda d : a0 - k*d
 
 class Client:
-    def __init__(self):
+    def __init__(self,n):
         """3 attributs à la classe Client : 
             alpha la sensibilité au prix
-            day le jour d'arrivée, qui est le nombre de jours avant le vol
+            day le jour d'arrivée 
             erreur qui est le bruit de la fonction utilité, dépend uniquement 
             du temps et mais pas du client et du vol """
-        self.day = numpy.random.randint(1,10) #on se place pour l'instant sur 
-        #un horizon de 10 jours et on tire aléatoirement le jour d'arrivée
-        self.alpha = alpha(self.day) #valeur prise arbitrairement, la sensibilité 
-        #décroit avec le temps
-        self.erreur = 0
+        self.day = n                 #jour d'arrivée du client, qui est unique pour chaque client et chaque client arrive un jour (bijection)
+        self.alpha = alpha(self.day) #valeur prise arbitrairement, la sensibilité décroit avec le temps
+        self.erreur = 0              #le bruit du client
     
     
     def gumbel(self):
