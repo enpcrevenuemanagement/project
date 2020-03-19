@@ -23,51 +23,50 @@ t1 = Time(12,30) #12h30
 def utility(C,V):
     """fonction qui définit l'utilité du vol V pour le client C selon son jour d'arrivée
     fonction scalaire linéaire au prix et non linéaire en fonction de l'heure du vol"""
-    return C.alpha + V.time_utility + C.erreur #le terme p(i,j) manque
+    return V.time_utility - C.alpha*V.proposal + C.erreur  #OK si on norme alpha et que on verifie que alpha reste positif. 
 
 
 
+#!!!!!!!ALGO DE STOCHASTIC DP EN CHANTIER A RELIRE/AMELIORER/MODIFIER PAR JULIAN et FRANCOIS!!!!!!!!
 
-#template 
+#initialisation des paramètres pour les vols 
+highest_numbered_state = 3*2 #taille du plus grand état = nombres de places dans les vols (3 par ex) x nombre de vols (2 par ex)
+f = numpy.zeros([stages + 2, highest_numbered_state + 1]) #pour stocker la meilleur espérance de chaque state à chaque stage
+x = numpy.zeros([stages + 1, highest_numbered_state + 1]) #pour stocker le pricing optimal nécessaire pour obtenir cette meilleur espérance 
+vols_de_la_journée =  [v1,v2]  #liste de 2 vols par exemple
+prices = [[30],[50],[100]] #les prix possibles pour chaque vol
+states = [] #tous les états possibles pour un client : chaque vol à 30, 50 ou 100e ou plus de places dans ce vol 
+for i in prices:
+    states.append([i,[]])
+    states.append([[],i])
+    for j in prices:
+        states.append([i,j])
 
-#Initialize all needed parameters and data 
-stages = 3 #nombre de stages
-highest_numbered_state =  #taille du plus grand état = nombres de places dans les vols x nombre de vols
-f = numpy.zeros([stages + 2, highest_numbered_state + 1]) 
-x = numpy.zeros([stages + 1, highest_numbered_state + 1]) 
+#début de l'algorithme à proprement parler
 
+for t in stages : #nouvelle étape, on est en backward (à parcourir à l'envers)
+    for i in states :  #état =  liste du prix proposé au client (liste du prix pour chaque vol à cet étape)
+        value = -hugeNumber  
+        for d in pricing_options :  #decision du nouveau pricing pour chacun des 2 vols [30,30] [30,50] [50,50] ....
+            esp = 0
+            for r in (v1,v2,rien) : #le client choisi son vol en maximisant son utilité ou pas de vol
+                j = état au stage t+1 
+                esp += (probability of r)*((benef sur r) + f[t+1,j]) 
 
-#If not zero, set each f[stages+1,i] to the terminal value of being in state i at the end For forbidden terminal states, use hugenumber for minimization, -hugenumber for maximization 
-vols_de_la_journée = liste de 1 à 4 vols 
-states = [vol_k.sold] for vol_k in vols_de_la_journée 
-
-for t in range(stages,0,-1) : 
-    for i in (states) : 
-    #Determine set of decisions d which are possible in this stage/state combination value = -hugeNumber if maximizing or hugenumber if minimizing 
-        for d in (set of allowed decisions d) : 
-        #Compute rewards/costs that are not random 
-        moveValue = (net rewards/costs that are not random) 
-
-            for r in (set of random outcomes r) : 
-                j = (resulting next state) #Compute rewards/costs that depend on r 
-                moveValue += (probability of r)*((rewards/costs depending on r) + f[t+1,j]) 
-                # If net present value is involved, beta*f[t+1,j]) instead, where 
-                # beta = 1/(1 + r) is the discount factor 
-
-            if moveValue > value : (use < instead of > if minimizing) 
-                value = moveValue 
+            if esp > value :  
+                value = esp 
                 bestMove = d 
 
-        # End of d loop 
+        #on stock à l'étape t l'état i la fonction valeur bénéfice dans f et la décision de pricing dans x
         f[t,i] = value 
         x[t,i] = bestMove 
 
-    # End of i loop 
-# End of t loop 
+    # fin boucle states i
+# fin boucle stages t 
 
-print("Optimal solution value is " + str(f[1,(initial state)])) 
-print("In stage 1, (describe decision) " + str(x[1, (initial state)]) 
+print("la valeur optimale est " + str(f[1,(initial state)])) #on travaille en backward
+print("A la première étape prendre la décision de pricing " + str(x[1, (initial state)]) 
 for t in range(2,stages+1) : 
-    print("In stage " + str(t) + ":") 
+    print("A l'étape " + str(t) + ":") 
     for i in (possible states) : 
-        print(" If (describe state) " + str(i) + ", (describe decision) " + str(x[t,i])
+        print(" si on est dans l'état " + str(i) + ", prendre la décision de pricing " + str(x[t,i])
