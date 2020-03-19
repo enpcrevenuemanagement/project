@@ -4,7 +4,8 @@
 from  Vol import *
 from Client import *
 import numpy 
-hugeNumber = float("inf") 
+hugeNumber = float("inf")
+N = 5 #nombre d'intervalles de temps
 
 #Definition des horaires des vols
 
@@ -17,6 +18,16 @@ class Time:
 #Exemple d'instances pour l'horaire:
 t1 = Time(8,30) #8h30
 t1 = Time(12,30) #12h30
+
+
+def demand_simulator(N):
+    """ fonction qui renvoie list_of_clients, une liste de clients à partir de N, le nombre d'intervalle de temps"""
+    list_of_clients=[]
+    for k in range(N):
+        if numpy.random.randint(0,1) > 0 : #condition pour savoir s'il y a un client à l'intervalle de temps k 
+            C= Client(k)
+            L.append(C)
+    return list_of_clients
 
 
 
