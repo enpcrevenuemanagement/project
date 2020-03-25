@@ -9,5 +9,5 @@ hugeNumber = float("inf")
 
 ### LISTE DE VARIABLES GLOBALES DU PROBLEME
 
-time_horizon = 5 #nombre d'intervalles de temps/jours d'ouverture de la billetteri
+time_horizon = 4 #nombre d'intervalles de temps/jours d'ouverture de la billetteri
 
