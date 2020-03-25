@@ -3,21 +3,14 @@
 
 from  Vol import *
 from Client import *
+
 import numpy 
 hugeNumber = float("inf")
-N = 5 #nombre d'intervalles de temps
 
-#Definition d'un format pour représenter l'horaire
-class Time:
+### LISTE DE VARIABLES GLOBALES DU PROBLEME
 
-    def __init__(self,h,m):
-        #Nombre d'heures au format décimal entre minuit et l'horaire considéré
-        self.hours=h+m/60
-        #Nombre de minutes entre minuit et l'horaire considéré
-        self.minutes=h*60+m
+time_horizon = 5 #nombre d'intervalles de temps/jours d'ouverture de la billetterie
 
-    def __str__(self):
-        return str(self.minutes//60)+":"+str(self.minutes%60)
 
 def demand_simulator(N):
     """ fonction qui renvoie list_of_clients, une liste de clients à partir de N, le nombre d'intervalle de temps"""
@@ -29,19 +22,7 @@ def demand_simulator(N):
     return list_of_clients
 
 
-# MODELES DE PREFERENCES
-
-def utility(C,V):
-    #Partie déterministe Ui(xj) de l'utilité du vol V pour le client C
-    return theta* + V.time_utility + C.erreur #le terme p(i,j) manque
-
-
-
-
-
-
-
-# ALGORITHME DE SDP
+### ALGORITHME DE SDP
 
 #Initialize all needed parameters and data 
 stages = 3 #nombre de stages
