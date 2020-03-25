@@ -30,6 +30,10 @@ class Vol:
         for k in range(len(self.pricing)):
             self.pricing[k] = x
 
+    def proposal(self):
+        if len(self.pricing) > 0:
+            return self.pricing[0]
+            
     def profit(self):
         return sum(self.sold)
 
