@@ -9,13 +9,15 @@ import math
 #Cela exclut donc aussi le stockage en attribut de la réalisation de la variable aléatoire de l'aléa du client
 #L'aléa lié au client est pris en compte dans la loi logit multinomiale
 
+
+#Modélisation arrivée selon loi de Poisson NH:
 class Client:
 
     def __init__(self,n):
         #Jour d'arrivée du client
-        self.time_range = n  
-
-
+        self.time_range = n 
+        #Dans le futur: autres paramètres distinctifs
+        #Par ex: client business ou economy, etc
     
 
 

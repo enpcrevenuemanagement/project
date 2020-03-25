@@ -27,7 +27,7 @@ def utility(C,V):
     theta = 1
     return theta * price_utility(C,V) + time_utility(C,V)
 
-#Selon une liste de vols Vi flights de longueur n, choix du client Cd'un vol ou de 0
+#Selon une liste de vols Vi flights de longueur n, choix du client C selon loi logit multinomiale
 #On définit la variable de choix yi par la PMF
 #v0 est l'utilité du choix 0
 def choice(C,flights,v0):
