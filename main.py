@@ -7,18 +7,17 @@ import numpy
 hugeNumber = float("inf")
 N = 4 #nombre d'intervalles de temps
 
-#Definition des horaires des vols
-
+#Definition d'un format pour représenter l'horaire
 class Time:
 
-    def init(self,h,m):
+    def __init__(self,h,m):
+        #Nombre d'heures au format décimal entre minuit et l'horaire considéré
         self.hours=h+m/60
+        #Nombre de minutes entre minuit et l'horaire considéré
         self.minutes=h*60+m
 
-#Exemple d'instances pour l'horaire:
-t1 = Time(8,30) #8h30
-t1 = Time(12,30) #12h30
-
+    def __str__(self):
+        return str(self.minutes//60)+":"+str(self.minutes%60)
 
 def demand_simulator(N):
     """ fonction qui renvoie list_of_clients, une liste de clients à partir de N, le nombre d'intervalle de temps"""
@@ -30,6 +29,7 @@ def demand_simulator(N):
     return list_of_clients
 
 
+# MODELES DE PREFERENCES
 
 def utility(C,V):
     """fonction qui définit l'utilité du vol V pour le client C selon son jour d'arrivée
