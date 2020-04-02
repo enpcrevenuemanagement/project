@@ -30,3 +30,5 @@ def demand_simulator(time_horizon):
             C = Client(k)
             list_of_clients.append(C)
     return list_of_clients
+
+ 
