@@ -10,26 +10,15 @@ N = time_horizon = 4 #nombre d'intervalles de temps/jours d'ouverture de la bill
 #Il faudrait créer un attribut v.sold_price qui prend en compte le prix de vente de chaque vol pour le stocker
 prices = [10,30,100] #les prix possibles pour chaque vol, 3 dans cet exemple
 
-#constructeur bourrin des états possibles avec le vecteur prices et 2 vols de 2 places chacuns(j'ai pas trouvé plus simple...)
-#Julian est en train de refaire ce constucteur sans prendre en compte le prix des places de manière plus clean 
+#construction des différents états possibles (les prix des places vendues n'ont pas d'intérêt à être dans states)
+#Si la place a été vendue, le coefficient vaut 1 (0 sinon)
 states = []
-for i in prices:
-    for j in prices:
-        states.append([[i],[j]])
-        states.append([[i],[]])
-        states.append([[],[j]])
-        states.append([[],[i,j]])
-        states.append([[i,j],[]])
-        states.append([[],[]])
-        for k in prices:
-            states.append([[i,j],[k]])
-            states.append([[i],[j,k]])
-            for l in prices:
-                states.append([[i,j],[k,l]])
-for k in states: #on retire les doublons
-        c=states.count(k)
-        if c>1:
-            states.remove(k)
+for i in [0,1]:
+    for j in [0,1]:
+        for k in [0,1]:
+            for l in [0,1]:
+                if (j <= i) and (l <= k):
+                    states.append([[i,j],[k,l]])
  
 #définition du pricing : chaque pricing est un vecteur de prix (1 prix par vol) [p1,p2]
 pricing_options = []
