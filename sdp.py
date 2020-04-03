@@ -47,8 +47,11 @@ for t in reversed(range(N)) : #nouvelle étape, on est en backward (à parcourir
                     state = i
                     esp += (proba que le client choisisse pas de vol)*0 + f[t+1][states.index(state)] #le bénéfice associé à ce cas de figure est nul
                 else : #il choisit le vol 1 ou 2
-                    state = i
-                    state.append(d[r-1]) #on passe dans un nouvel état : celui qui correspond à la vente d'une place de plus au prix d[r-1] sur le vol r
+                    state = i #on passe dans un nouvel état : celui qui correspond à la vente d'une place de plus au prix d[r-1] sur le vol r
+                    if state[r-1][0] == 0:
+                        state[r-1][0] = 1
+                    else :
+                        state[r-1][1] = 1
                     esp += (proba que le client choisisse ce vol)*d[r-1] + f[t+1][states.index(state)] #le bénéfice associé à ce cas de figure est d[r-1]
 #nécessité de passer en backward : des qu'on calcule le nouvel état qui correspond à l'issue de la vente on doit savoir quel est le resultat de l'espérance
 #des gains de ce nouvel état de t+1 à n pour calculer l'espérance de gains globale de t à n.
