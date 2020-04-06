@@ -15,6 +15,8 @@ class Vol:
         self.price = 0
         #Prix des sièges vendus
         self.sold = []
+        #Nombre de sièges restants
+        self.remaining = n
  
     #Méthode pour mettre à jour le prix du vol, lorsque une place a été vendue après un client  
     #on l'ajoute dans sold au prix ou elle a été vendue
@@ -22,11 +24,11 @@ class Vol:
 
     def maj_pricing(self, x):
         self.sold.append(self.price)
-        self.price = x
-
-    def proposal(self):
-        if len(self.pricing) > 0:
-            return self.pricing[0]
+        self.remaining -= 1
+        if self.remaining > 0:
+            self.price = x
+        else:
+            self.price = -1
             
     def profit(self):
         return sum(self.sold)
