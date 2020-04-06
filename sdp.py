@@ -4,10 +4,14 @@ import numpy
 hugeNumber = float("inf")
 
 #EXEMPLE AVEC 2 VOLS DE 2 PLACES CHACUNS AVEC 3 PRIX POSSIBLES PAR PLACE SUR 4 CLIENTS
-N = time_horizon = 4 #nombre d'intervalles de temps/jours d'ouverture de la billetterie
+
+#Nombre de steps de l'algo = Nombre de clients donnés en INPUT
+N = 4
+
 #vols_de_la_journée =  [v1,v2]  liste de 2 vols de 2 places chacuns dans cet exemple
-#définition des états : chaque état est la liste des vecteurs v.sold possibles (sans le prix du coup)
-#Il faudrait créer un attribut v.sold_price qui prend en compte le prix de vente de chaque vol pour le stocker
+#INPUT aussi
+
+#définition des états : chaque état correspond à une valeur de self.remaining
 prices = [10,30,100] #les prix possibles pour chaque vol, 3 dans cet exemple
 
 #construction des différents états possibles (les prix des places vendues n'ont pas d'intérêt à être dans states)

@@ -29,6 +29,12 @@ def demand_simulator(time_horizon):
         for k in range(NHPP(day,time_horizon)):
             C = Client(day)
             list_of_clients.append(C)
+
+    with open('client_database', mode='w') as file:
+        file_writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for client in list_of_clients:
+            file_writer.writerow([client.time_range])
+
     return list_of_clients
 
 def demand_csv(time_horizon):
