@@ -37,10 +37,4 @@ def demand_simulator(time_horizon):
 
     return list_of_clients
 
-def demand_csv(time_horizon):
-    with open('client_database', mode='w') as file:
-        file_writer = csv.writer(file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-        for client in demand_simulator(time_horizon):
-            file_writer.writerow([client.time_range])
-
  
