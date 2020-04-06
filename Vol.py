@@ -1,35 +1,28 @@
 import math
 
-#Fonction entre 0 et 1 ?
-time_preference = lambda x : (5 + math.cos(x-8) - (x-8)*math.cos(x-8))/12.3507
+
+#Modélisation des caractéristiques propres à chaque vol 
+#Cela exclut tout ce qui dépend aussi du client (utilité du client pour le vol entre autres ==> utility.py)
 
 class Vol:
 
-    
-    #time_utility = fonction chameau pour l'utilité horaire commune à tous les clients et 
-    #qui dépend uniquement de l'heure du vol
-
     def init(self,t,n):
+        #Paramètres immuables du vol
         self.departure_time = t #en heures, en base 10
         self.seats = n #Type int
-        self.pricing = []
-        self.time_utility = time_preference(t.hours)
+        #Variables
+        #Prix affiché pour le client
+        self.price = 0
+        #Prix des sièges vendus
         self.sold = []
  
-    #Au début on initialise toutes les places avec le même prix p (pas d'interet de les segmenter vu qu'on met à jour à chaque fois)
-    
-    def new_pricing(self, p):
-        for i in range(self.seats):  
-            self.pricing[i] = p
- 
-    #Méthode pour mettre à jour un pricing de vol, lorsque une place a été vendue après un client  
-    #on supprime la place vendue de la liste, on l'ajoute dans sold au prix ou elle a été vendue
-    #on met à jour au nouveau prix de vente x le pricing avec une place de moins dans l'avion
+    #Méthode pour mettre à jour le prix du vol, lorsque une place a été vendue après un client  
+    #on l'ajoute dans sold au prix ou elle a été vendue
+    #on met à jour le nouveau prix de vente x
 
     def maj_pricing(self, x):
-        self.sold.append(self.pricing.pop([0]))
-        for k in range(len(self.pricing)):
-            self.pricing[k] = x
+        self.sold.append(self.price)
+        self.price = x
 
     def proposal(self):
         if len(self.pricing) > 0:
