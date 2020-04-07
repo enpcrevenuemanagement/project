@@ -60,6 +60,15 @@ def Pricing_options(prices, flights):
                             pricing_options.append([i,j,k,l])
     return pricng_options
 
+def Pricing_options2(prices, flights):
+    n = len(flights)
+    arg = [prices for i in range (n)]
+    pricing_options = []
+    for pricing_option in itertools.product(*arg):
+        if pricing_option not in pricing_options :
+            pricing_options.append(pricing_option)
+    return pricing_options
+
 
 def SDP(prices, flights, N): #prix possibles, vols, et nombre de clients 
     #définition des états possibles {v1:places vendues, v2:places vendues, ...}
