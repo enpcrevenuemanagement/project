@@ -1,6 +1,7 @@
 import csv 
 from vol import *
 from utility import *
+from sdp import *
 
 ### READ CSV DATABASE CLIENT ==> LISTE DE CLIENTS (OBJETS)
 '''with open('client_database') as csv_file:
@@ -19,7 +20,8 @@ from utility import *
 
 
 #Fonction pour trouver l'index dans states à partir d'un state en remplacement d'une recherche d'index
-def find_index(state):
+def find_index(state,flights):
+    seats = [flight.seats for flight in flights]
     return int(sum([state[i]*np.prod(seats[i+1:]) for i in range(len(flights))]))
 
 def profit(flights,prices,list_of_clients,pricing_policy):
@@ -60,7 +62,7 @@ def profit(flights,prices,list_of_clients,pricing_policy):
             #On modifie l'état
             state[flight] = flight.remaining
             #On récupère l'index
-            state_index = find_index(state)
+            state_index = find_index(state,flights)
 
         #si pas d'achat rien ne change
         step += 1

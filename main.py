@@ -4,7 +4,8 @@
 from  Vol import *
 from Client import *
 from demand import *
-from sdp.py import *
+from sdp import *
+from profit import *
 
 import numpy 
 hugeNumber = float("inf")
@@ -34,6 +35,3 @@ list_of_clients = demand_simulator(time_horizon)
 
 ### CALCUL DU PROFIT REALISE
 profit = profit(flights,prices,list_of_clients,pricing_policy)
-
-
-
