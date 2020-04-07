@@ -29,13 +29,17 @@ def utility(C,V):
 
 #Selon une liste de vols Vi flights de longueur n, choix du client C selon loi logit multinomiale
 #On définit la variable de choix yi par la PMF
-#v0 est l'utilité du choix 0
+#v0 est l'utilité du choix -1
+
 def choice(C,flights,v0):
     n = len(flights)
-    choices = [k for k in range(n+1)]
+    #0 à n-1 pour les n vols et -1 si pas d'achat
+    choices = [-1]+[k for k in range(n)]
     utilities = [math.exp(v0)]
     for flight in flights:
-        utilities.append(math.exp(utility(C,flight)))
+        #Le client ne choisit que parmi les vols ou il reste des places !!!
+        if flight.remaining > 0:
+            utilities.append(math.exp(utility(C,flight)))
     s = sum(utilities)
     probabilities = [u/s for u in utilities]
     return np.random.choice(choices, 1, p=probabilities)

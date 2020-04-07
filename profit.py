@@ -19,7 +19,7 @@ from utility import *
 
 
 #Fonction pour trouver l'index dans states à partir d'un state en remplacement d'une recherche d'index
-def state_index(state):
+def find_index(state):
     return int(sum([state[i]*np.prod(seats[i+1:]) for i in range(len(flights))]))
 
 def profit(flights,prices,list_of_clients,pricing_policy):
@@ -41,18 +41,15 @@ def profit(flights,prices,list_of_clients,pricing_policy):
 
     for client in list_of_clients:
         #On cherche le pricing correspondant (dico)
-        #PB : state index ???
-        pricing = x[step][state_index]
+        pricing = pricing_policy[step][state_index]
         #On doit mettre à jour le prix proposé de chaque vol
-        for price in pricing:
-            break
-            #flights[i]  prend le prix pricing[i]
+        for flight in flights:
+            flight.price = pricing[flight]
 
-        #On regarde sa réaction 
+        #Le client prend une décision
         #flight_choice = -1 si pas d'achat, i si achat vol i
-
-        #QUESTION: Flights doit contenir les vols encore dispo?
-
+        #Choix seulement s'il reste de la place !
+        v0 = 0
         flight_choice = choice(client,flights,v0)
 
         #Si achat
@@ -62,8 +59,8 @@ def profit(flights,prices,list_of_clients,pricing_policy):
             flight.sell()
             #On modifie l'état
             state[flight] = flight.remaining
-            #On est obligé de chercher l'index dans states.....????
-            state_index = states.index(state)
+            #On récupère l'index
+            state_index = find_index(state)
 
         #si pas d'achat rien ne change
         step += 1
