@@ -4,6 +4,7 @@ from demand import *
 from utility import *
 from time import *
 import numpy 
+import itertools
 hugeNumber = float("inf")
 
 
@@ -28,6 +29,13 @@ def States(flights):  #états possibles pour flights
                         states.append({flights[0]:i, flights[1]:j, flights[2]:k, flights[3]:l})
     return states
 
+def States2(flights):
+    n = len(flights)
+    arg = [range(f.seats+1) for f in flights]
+    states = []
+    for state in itertools.product(*arg):  
+            states.append({flights[i]: state[i] for i in range(n)})
+    return states
 
 def Pricing_options(prices, flights):
     n = len(flights)
@@ -48,8 +56,8 @@ def Pricing_options(prices, flights):
             for j in prices:  
                 for k in prices:
                     for l in prices:
-                    if [i,j,k,l] not in pricing_options:
-                        pricing_options.append([i,j,k,l])
+                        if [i,j,k,l] not in pricing_options:
+                            pricing_options.append([i,j,k,l])
     return pricng_options
 
 
