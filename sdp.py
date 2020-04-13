@@ -6,6 +6,7 @@ from time import *
 import numpy 
 import itertools
 hugeNumber = float("inf")
+v0 = 0.5 #utilité du choix 0
 
 
 def States(flights):
@@ -26,7 +27,7 @@ def Pricing_options(prices, flights):
     return pricing_options
 
 
-def SDP(prices, flights, N): #prix possibles, vols, et nombre de clients 
+def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
     #définition des états possibles {v1:places vendues, v2:places vendues, ...}
     states = States(flights)
     #définition du pricing :  [p1,p2,...]
@@ -37,6 +38,8 @@ def SDP(prices, flights, N): #prix possibles, vols, et nombre de clients
     x = [[[] for k in range(len(states))] for l in range(N+1)]  
 
     for t in reversed(range(N)) : #nouvelle étape, on est en backward (à parcourir à l'envers)
+        #création d'un client type pour cette étape (uniquement pour calculer la probabilité avec C.time_range = t)
+        C = Client(t)
         for state in states:  #états accessibles à l'étape t, toutes les paires possibles de vecteur sold
             value = -hugeNumber 
             bestMove = [] 
@@ -58,11 +61,11 @@ def SDP(prices, flights, N): #prix possibles, vols, et nombre de clients
                 for f in flights : #le client choisi son vol en maximisant son utilité ou pas de vol 
                     new_state = state
                     new_state[f] += 1 #nouvel état qui correspond à une place de plus vendue sur ce vol
-                    esp += p(f,t)*(f.price + F[t+1][states.index(new_state)]) #p(f,t) proba que le client t choisisse le vol f (au prix f.price) 
+                    esp += proba_c_v(C,f,flights,v0)*(f.price + F[t+1][states.index(new_state)])  
 
                 #cas où le client t ne choisit aucun vol
                 #p0(t) la proba associée, on reste dans le même état à t+1 et pas de bénéfices engendrés à t
-                esp += p0(t)*F[t+1][states.index(state)]
+                esp += proba_v0(C,flights,v0)*F[t+1][states.index(state)]
 
     #nécessité de passer en backward : des qu'on calcule le nouvel état qui correspond à l'issue de la vente on doit savoir quel est le resultat de l'espérance
     #des gains de ce nouvel état de t+1 à n pour calculer l'espérance de gains globale de t à n.
