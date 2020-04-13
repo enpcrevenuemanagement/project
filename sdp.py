@@ -80,4 +80,4 @@ def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
         # fin boucle states i
     # fin boucle stages t
     return F,x
- 
+
