@@ -8,7 +8,8 @@ class Vol:
 
     def init(self,t,n):
         #Paramètres immuables du vol
-        self.departure_time = t #en heures, en base 10
+        h,m = t
+        self.departure_time = Horaire(h,m) #instance de la classe Horaire
         self.seats = n #Type int
         #Variables
         #Prix affiché pour le client

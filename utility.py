@@ -2,17 +2,25 @@
 import numpy as np
 import math
 
+from Vol import *
+from horaire import *
+from Client import *
+
 #Fonction utilité du client relative à l'horaire h du vol (chameau)
-#Fonction entre 0 et 1 ?
+#Fonction entre 0 et 1
+
 def time_utility(C,V):
+    #Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire)
     res = lambda h : (5 + math.cos(h-8) - (h-8)*math.cos(h-8))/12.3507
-    return res(V.time_departure)
+    return res(V.departure_time.hours)
 
 #Fonction avec les 2 paliers comme axel nous a montré
-#varie entre 0 et 1.
+# [0,1] ==> [0,1]
+
 def time_decay_utility(C):
-    res = lambda h : (12 + math.sin(h)-h)/12
-    return res(C.time_range)
+    #Prend en entrée un entier qui code le jour d'arrivée du client entre 1 et time_horizon
+    res = lambda a,x : 1 - x + math.sin(a*math.pi*x)/(a*math.pi)
+    return res(4,C.time_range)
 
 #Fonction utilité du client relative au prix p, selon le temps t (jour d'arrivée)
 #varie entre 1 et 0

@@ -13,9 +13,9 @@ import math
 #Modélisation arrivée selon loi de Poisson NH:
 class Client:
 
-    def __init__(self,n):
-        #Jour d'arrivée du client
-        self.time_range = n 
+    def __init__(self,ti):
+        #Jour d'arrivée du client normalisée entre 0 et 1 !!!
+        self.time_range = ti
         #Dans le futur: autres paramètres distinctifs
         #Par ex: client business ou economy, etc
     

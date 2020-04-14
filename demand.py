@@ -11,14 +11,14 @@ import csv
 from Client import *
 
 #Simulation d'un processus de poisson non homogène (NHPP) 
-#pour avoir le nombre de clients arrivés le jour t sur un horizon de taille N
-def NHPP(t,time_horizon):
+#pour avoir le nombre de clients arrivés le jour d ie t=d/T
+def NHPP(t):
     i0 = 1
     a = 10
     b = 3
     #Distribution beta standardisée de paramètres a et b
     intensity = lambda x : i0 * scipy.stats.beta.pdf(x,a,b)/x
-    return np.random.poisson(intensity(t/time_horizon))
+    return np.random.poisson(intensity(t))
 
 
 def demand_simulator(time_horizon):
@@ -26,8 +26,9 @@ def demand_simulator(time_horizon):
     list_of_clients=[]
     #On parcourt les jours 1 à time_horizon
     for day in range(1,time_horizon+1):
-        for k in range(NHPP(day,time_horizon)):
-            C = Client(day)
+        t = day/time_horizon
+        for k in range(NHPP(t)):
+            C = Client(t)
             list_of_clients.append(C)
 
     with open('client_database', mode='w') as file:
