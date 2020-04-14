@@ -2,9 +2,9 @@
 import numpy as np
 import math
 
-from Vol import *
+from vol import *
 from horaire import *
-from Client import *
+from client import *
 
 #Fonction utilité du client relative à l'horaire h du vol (chameau)
 #Fonction entre 0 et 1
@@ -20,7 +20,7 @@ def time_utility(C,V):
 def time_decay_utility(C):
     #Prend en entrée un entier qui code le jour d'arrivée du client entre 1 et time_horizon
     res = lambda a,x : 1 - x + math.sin(a*math.pi*x)/(a*math.pi)
-    return res(4,C.time_range)
+    return res(3,C.time_range)
 
 #Fonction utilité du client relative au prix p, selon le temps t (jour d'arrivée)
 #varie entre 1 et 0
@@ -39,15 +39,17 @@ def utility(C,V):
 def choice(C,flights,v0):
     n = len(flights)
     #0 à n-1 pour les n vols et -1 si pas d'achat
-    choices = [-1]+[k for k in range(n)]
+    choices = [-1]
     utilities = [math.exp(v0)]
-    for flight in flights:
+    for i in range(n):
+        flight = flights[i]
         #Le client ne choisit que parmi les vols ou il reste des places !!!
         if flight.remaining > 0:
             utilities.append(math.exp(utility(C,flight)))
+            choices.append(i)
     s = sum(utilities)
     probabilities = [u/s for u in utilities]
-    return np.random.choice(choices, 1, p=probabilities)
+    return np.random.choice(choices, 1, p=probabilities)[0]
 
 #proba que le client C choisisse le vol V parmi une liste flights
 #v0 est l'utilité du choix 0

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from  Vol import *
-from Client import *
+from  vol import *
+from client import *
 from demand import *
 from sdp import *
 from profit import *

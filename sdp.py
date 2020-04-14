@@ -1,5 +1,5 @@
-from  Vol import *
-from Client import *
+from vol import *
+from client import *
 from demand import *
 from utility import *
 from time import *
@@ -23,7 +23,7 @@ def Pricing_options(prices, flights):
     pricing_options = []
     for pricing_option in itertools.product(*arg):
         if pricing_option not in pricing_options :
-            pricing_options.append(pricing_option)
+            pricing_options.append(list(pricing_option))
     return pricing_options
 
 
@@ -39,7 +39,8 @@ def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
 
     for t in reversed(range(N)) : #nouvelle étape, on est en backward (à parcourir à l'envers)
         #création d'un client type pour cette étape (uniquement pour calculer la probabilité avec C.time_range = t)
-        C = Client(t)
+        ti=t/N
+        C = Client(ti)
         for state in states:  #états accessibles à l'étape t, toutes les paires possibles de vecteur sold
             value = -hugeNumber 
             bestMove = [] 
@@ -74,8 +75,8 @@ def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
                     bestMove = d   #si l'esperance de gain est maximale pour une decision de pricing, on stock la valeur et la decision associée
 
             #on stock à l'étape t et à l'état i la fonction valeur bénéfice dans f et la décision de pricing dans x
-            F[t][states.index(i)] = value
-            x[t][states.index(i)] = bestMove
+            F[t][states.index(state)] = value
+            x[t][states.index(state)] = bestMove
 
         # fin boucle states i
     # fin boucle stages t

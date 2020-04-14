@@ -22,12 +22,12 @@ from sdp import *
 #Fonction pour trouver l'index dans states à partir d'un state en remplacement d'une recherche d'index
 def find_index(state,flights):
     seats = [flight.seats for flight in flights]
-    return int(sum([state[i]*np.prod(seats[i+1:]) for i in range(len(flights))]))
+    return int(sum([state[flights[i]]*np.prod(seats[i+1:]) for i in range(len(flights))]))
 
 def profit(flights,prices,list_of_clients,pricing_policy):
 
     #Si on a trop de clients, la politique de prix est invalide ==> ERREUR
-    N = len(list_of_clients)
+    #N = len(list_of_clients)
     
 
     #Sinon c'est OK et on prend les clients par ordre d'arrivée
@@ -45,8 +45,8 @@ def profit(flights,prices,list_of_clients,pricing_policy):
         #On cherche le pricing correspondant (dico)
         pricing = pricing_policy[step][state_index]
         #On doit mettre à jour le prix proposé de chaque vol
-        for flight in flights:
-            flight.price = pricing[flight]
+        for i in range(len(flights)):
+            flights[i].price = pricing[i]
 
         #Le client prend une décision
         #flight_choice = -1 si pas d'achat, i si achat vol i
@@ -68,7 +68,7 @@ def profit(flights,prices,list_of_clients,pricing_policy):
         step += 1
 
     #Quand on a fini de parcourir la file de clients, on calcule le gain total
-    return sum([f.profit for f in flights])
+    return sum([f.gain() for f in flights])
 
 
 

@@ -8,7 +8,7 @@ import numpy as np
 
 import csv 
 
-from Client import *
+from client import *
 
 #Simulation d'un processus de poisson non homogène (NHPP) 
 #pour avoir le nombre de clients arrivés le jour d ie t=d/T
