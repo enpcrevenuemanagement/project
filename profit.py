@@ -27,7 +27,7 @@ def find_index(state,flights):
 def profit(flights,prices,list_of_clients,pricing_policy):
 
     #Si on a trop de clients, la politique de prix est invalide ==> ERREUR
-    #N = len(list_of_clients)
+    N = len(list_of_clients)
     
 
     #Sinon c'est OK et on prend les clients par ordre d'arrivée
@@ -42,8 +42,10 @@ def profit(flights,prices,list_of_clients,pricing_policy):
     state = states[state_index]
 
     for client in list_of_clients:
-        #On cherche le pricing correspondant (dico)
+        print("Arrivée du client n°{} sur {}".format(step+1,N))
+        #On cherche le pricing correspondant [p1,...,pn]
         pricing = pricing_policy[step][state_index]
+        print(">>>Le pricing optimal calculé à ce stade est {}".format(pricing))
         #On doit mettre à jour le prix proposé de chaque vol
         for i in range(len(flights)):
             flights[i].price = pricing[i]
@@ -56,6 +58,7 @@ def profit(flights,prices,list_of_clients,pricing_policy):
 
         #Si achat
         if flight_choice != -1:
+            print(">>>Le client choisit le vol {} d'utilité {}".format(flight_choice,math.exp(utility(client,flights[flight_choice]))))
             flight = flights[flight_choice]
             #On modifie l'objet Vol pour 
             flight.sell()
@@ -63,6 +66,10 @@ def profit(flights,prices,list_of_clients,pricing_policy):
             state[flight] = flight.remaining
             #On récupère l'index
             state_index = find_index(state,flights)
+
+        else:
+            print("Le client choisit de ne pas acheter pour une utilité de exp(0)=1")
+
 
         #si pas d'achat rien ne change
         step += 1

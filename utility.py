@@ -48,6 +48,7 @@ def choice(C,flights,v0):
             utilities.append(math.exp(utility(C,flight)))
             choices.append(i)
     s = sum(utilities)
+    print(">>>Le client peut acheter l'un des vols pour les valeurs d'utilité suivantes: {}".format(flights,utilities[1:]))
     probabilities = [u/s for u in utilities]
     return np.random.choice(choices, 1, p=probabilities)[0]
 

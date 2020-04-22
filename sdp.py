@@ -1,11 +1,11 @@
-from Vol import *
-from Client import *
+from vol import *
+from client import *
 from demand import *
 from utility import *
 from time import *
 import numpy 
 import itertools
-v0 = 0.05 #utilité du choix 0
+v0 = 0 #utilité du choix 0
 
 
 def States(flights):
