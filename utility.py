@@ -25,12 +25,14 @@ def time_decay_utility(C):
 #Fonction utilité du client relative au prix p, selon le temps t (jour d'arrivée)
 #varie entre 1 et 0
 def price_utility(C,V):
-    return math.exp(-time_decay_utility(C)*V.price)
+    #return math.exp(-time_decay_utility(C)*V.price)
+    #return 100*math.exp(-0.001*V.price)-50
+    return max(100-V.price,0)
 
-#Partie déterministe vi(xj) de l'utilité du vol V pour le client C
+#Partie déterministe vi(xj) de l'utilité du vol V pour le client C entre 0 et 1
 def utility(C,V):
-    theta = 1
-    return theta * price_utility(C,V) + time_utility(C,V)
+    theta = 0
+    return (price_utility(C,V) + theta * time_utility(C,V)) / (1 + theta)
 
 #Selon une liste de vols Vi flights de longueur n, choix du client C selon loi logit multinomiale
 #On définit la variable de choix yi par la PMF
@@ -40,16 +42,20 @@ def choice(C,flights,v0):
     n = len(flights)
     #0 à n-1 pour les n vols et -1 si pas d'achat
     choices = [-1]
-    utilities = [math.exp(v0)]
+    utilities = [v0]
+    utilities_exp = [math.exp(v0)]
     for i in range(n):
         flight = flights[i]
         #Le client ne choisit que parmi les vols ou il reste des places !!!
         if flight.remaining > 0:
-            utilities.append(math.exp(utility(C,flight)))
+            utilities.append(utility(C,flight))
+            utilities_exp.append(math.exp(utility(C,flight)))
             choices.append(i)
-    s = sum(utilities)
-    print(">>>Le client peut acheter l'un des vols pour les valeurs d'utilité suivantes: {}".format(utilities[1:]))
-    probabilities = [u/s for u in utilities]
+    s = sum(utilities_exp)
+    
+    probabilities = [u/s for u in utilities_exp]
+    print(">>>Le client peut acheter l'un des vols pour les valeurs d'utilité: {} et de probabilité: {}".format(utilities,probabilities))
+
     return np.random.choice(choices, 1, p=probabilities)[0]
 
 #proba que le client C choisisse le vol V parmi une liste flights

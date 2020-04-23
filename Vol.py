@@ -30,3 +30,12 @@ class Vol:
     def gain(self):
         return sum(self.sold)
 
+    def reset(self):
+        #Prix affiché pour le client
+        self.price = 0
+        #Prix des sièges vendus
+        self.sold = []
+        #Nombre de sièges restants
+        self.remaining = self.seats
+
+

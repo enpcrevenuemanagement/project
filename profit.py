@@ -24,7 +24,7 @@ def find_index(state,flights):
     seats = [flight.seats for flight in flights]
     return int(sum([state[flights[i]]*np.prod(seats[i+1:]) for i in range(len(flights))]))
 
-def profit(flights,prices,list_of_clients,pricing_policy):
+def profit(flights,prices,list_of_clients,pricing_policy,v0):
 
     #Si on a trop de clients, la politique de prix est invalide ==> ERREUR
     N = len(list_of_clients)
@@ -41,11 +41,13 @@ def profit(flights,prices,list_of_clients,pricing_policy):
     state_index = 0
     state = states[state_index]
 
+
+
     for client in list_of_clients:
         print("Arrivée du client n°{} sur {}".format(step+1,N))
         #On cherche le pricing correspondant [p1,...,pn]
         pricing = pricing_policy[step][state_index]
-        print(">>>Le pricing optimal calculé à ce stade est {}".format(pricing))
+        print(">>>Les prix proposés sont :{}".format(pricing))
         #On doit mettre à jour le prix proposé de chaque vol
         for i in range(len(flights)):
             flights[i].price = pricing[i]
@@ -53,13 +55,14 @@ def profit(flights,prices,list_of_clients,pricing_policy):
         #Le client prend une décision
         #flight_choice = -1 si pas d'achat, i si achat vol i
         #Choix seulement s'il reste de la place !
-        v0 = 0
         flight_choice = choice(client,flights,v0)
 
         #Si achat
         if flight_choice != -1:
-            print(">>>Le client choisit le vol {} d'utilité {}".format(flight_choice,math.exp(utility(client,flights[flight_choice]))))
             flight = flights[flight_choice]
+            #print(">>>Le client choisit le vol {} d'utilité {}".format(flight_choice,math.exp(utility(client,flights[flight_choice]))))
+            u = utility(client,flight)
+            print(">>>Le client choisit le vol {} pour un prix de {} et une utilité de {}".format(flight_choice,flight.price,u))
             #On modifie l'objet Vol pour 
             flight.sell()
             #On modifie l'état
@@ -68,7 +71,7 @@ def profit(flights,prices,list_of_clients,pricing_policy):
             state_index = find_index(state,flights)
 
         else:
-            print("Le client choisit de ne pas acheter pour une utilité de exp(0)=1")
+            print(">>>Le client choisit de ne pas acheter pour une utilité de {}".format(v0))
 
 
         #si pas d'achat rien ne change

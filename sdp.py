@@ -1,11 +1,10 @@
-from Vol import *
-from Client import *
+from vol import *
+from client import *
 from demand import *
 from utility import *
 from time import *
 import numpy 
 import itertools
-v0 = 0 #utilité du choix 0
 
 
 def States(flights):
@@ -26,8 +25,7 @@ def Pricing_options(prices, flights):
     return pricing_options
 
 
-def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
-
+def SDP(prices, flights, N, v0): #prix possibles, vols, nombre de clients
     #définition des états possibles {v1:places vendues, v2:places vendues, ...}
     states = States(flights)
     #définition du pricing :  [p1,p2,...]
@@ -41,9 +39,7 @@ def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
         #création d'un client type pour cette étape (uniquement pour calculer la probabilité avec C.time_range = t)
         ti=t/N
         C = Client(ti)
-        count =0
         for state in states:  #états accessibles à l'étape t, toutes les paires possibles de vecteur sold
-            count +=1
             for d in pricing_options :  #decision du nouveau pricing pour chacun des vols  
                 esp = 0
 
@@ -56,8 +52,6 @@ def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
                 #on affecte maintenant chaque prix au vol correspondant 
                 for j in range(len(flights)):
                     flights[j].price = d[j]  
-               
-                #les prix sont à jour, on calcule l'espérance de gains futurs de t à N.
 
                 for f in flights : #le client choisi son vol en maximisant son utilité ou pas de vol 
                     if f not in vols_pleins:
@@ -68,14 +62,15 @@ def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
                 #cas où le client t ne choisit aucun vol
                 #p0(t) la proba associée, on reste dans le même état à t+1 et pas de bénéfices engendrés à t
                 esp += proba_v0(C,flights,v0)*F[t+1][states.index(state)]
-                #print(t, count, esp)
     #nécessité de passer en backward : des qu'on calcule le nouvel état qui correspond à l'issue de la vente on doit savoir quel est le resultat de l'espérance
     #des gains de ce nouvel état de t+1 à n pour calculer l'espérance de gains globale de t à n.
+                
                 if esp > F[t][states.index(state)]:
                     F[t][states.index(state)] = esp
                     x[t][states.index(state)] = d   #si l'esperance de gain est maximale pour une decision de pricing, on stock la valeur et la decision associée
-
         # fin boucle states i
+
+
     # fin boucle stages t
     return F,x
 
