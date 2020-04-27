@@ -9,19 +9,19 @@ from profit import *
 ### SIMULATEUR D'OFFRE DE VOLS
 
 #Liste des vols
-V1 = Vol((12,30),2)
-V2 = Vol((18,30),2)
+V1 = Vol((12,30),5)
+V2 = Vol((14,30),5)
 flights = [V1,V2]
 #Liste des options de prix possibles
 #prices = [0.001,0.01,0.1,1,10,1E2,1E3,1E4,1E5,1E6]
 prices = list(range(100))
-
+total_seats = sum([f.seats for f in flights])
 #v0 
 v0 = 10
 
 ### SIMULATEUR DE DEMANDE CLIENT SANS REPERE TEMPOREL
 
-N = 4
+N = 40
 list_of_clients=[]
 for i in range(1,N+1):
     ti = i/N
@@ -40,10 +40,9 @@ def simulator(n):
         for f in flights:
             f.reset()
         profits.append(profit(flights,prices,list_of_clients,pricing_policy, v0))
-    #print(profits)
+    print(profits)
     return sum(profits)/n
 
 ### OUTPUT
-
-print("Le revenu moyen par place généré par les vols est de {}.".format(simulator(1000)/N))
+print("Le revenu moyen par place généré par les vols est de {}.".format(simulator(100)/total_seats))
 #print("La politique de prix est {}".format(pricing_policy))

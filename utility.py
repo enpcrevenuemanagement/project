@@ -18,7 +18,7 @@ def time_utility(C,V):
 # [0,1] ==> [0,1]
 
 def time_decay_utility(C):
-    #Prend en entrée un entier qui code le jour d'arrivée du client entre 1 et time_horizon
+    #Prend en entrée time_range ti entre 0 et 1
     res = lambda a,x : 1 - x + math.sin(a*math.pi*x)/(a*math.pi)
     return res(3,C.time_range)
 
@@ -27,7 +27,9 @@ def time_decay_utility(C):
 def price_utility(C,V):
     #return math.exp(-time_decay_utility(C)*V.price)
     #return 100*math.exp(-0.001*V.price)-50
-    return max(100-V.price,0)
+    #a = (1-C.time_range)
+    a = 1
+    return max(100-a*V.price,0)
 
 #Partie déterministe vi(xj) de l'utilité du vol V pour le client C entre 0 et 1
 def utility(C,V):
@@ -46,7 +48,6 @@ def choice(C,flights,v0):
     utilities_exp = [math.exp(v0)]
     for i in range(n):
         flight = flights[i]
-        #Le client ne choisit que parmi les vols ou il reste des places !!!
         if flight.remaining > 0:
             utilities.append(utility(C,flight))
             utilities_exp.append(math.exp(utility(C,flight)))
@@ -54,25 +55,26 @@ def choice(C,flights,v0):
     s = sum(utilities_exp)
     
     probabilities = [u/s for u in utilities_exp]
-    print(">>>Le client peut acheter l'un des vols pour les valeurs d'utilité: {} et de probabilité: {}".format(utilities,probabilities))
-
+    print(">>>Le client peut acheter l'un des vols pour les valeurs d'utilité: {} et de probabilité: {}".format(utilities[1:],probabilities[1:]))
     return np.random.choice(choices, 1, p=probabilities)[0]
 
-#proba que le client C choisisse le vol V parmi une liste flights
+#proba que le client C choisisse le vol V parmi une liste flights: SEULEMNT SIL  RESTE DES PLACES
 #v0 est l'utilité du choix 0
-def proba_c_v(C,V,flights,v0): 
+def proba_c_v(C,V,flights,vols_pleins,v0): 
     utilities = [math.exp(v0)]
     for flight in flights:
-        utilities.append(math.exp(utility(C,flight)))
+        if flight not in vols_pleins:
+            utilities.append(math.exp(utility(C,flight)))
     s = sum(utilities)
     probability = math.exp(utility(C,V))/s
     return probability
 
 #probabilité de ne chosisir aucun vol
-def proba_v0(C,flights, v0): 
+def proba_v0(C,flights,vols_pleins, v0): 
     utilities = [math.exp(v0)]
     for flight in flights:
-        utilities.append(math.exp(utility(C,flight)))
+        if flight not in vols_pleins:
+            utilities.append(math.exp(utility(C,flight)))
     s = sum(utilities)
     probability = math.exp(v0)/s
     return probability

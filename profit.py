@@ -18,11 +18,11 @@ from sdp import *
 
     return list_of_clients'''
 
-
-#Fonction pour trouver l'index dans states à partir d'un state en remplacement d'une recherche d'index
-def find_index(state,flights):
-    seats = [flight.seats for flight in flights]
-    return int(sum([state[flights[i]]*np.prod(seats[i+1:]) for i in range(len(flights))]))
+def seat_available(flights):
+    for f in flights:
+        if f.remaining > 0:
+            return True
+    return False
 
 def profit(flights,prices,list_of_clients,pricing_policy,v0):
 
@@ -39,15 +39,21 @@ def profit(flights,prices,list_of_clients,pricing_policy,v0):
     states = States(flights)
     #Etat initial (0,0,....,0)
     state_index = 0
-    state = states[state_index]
-
-
 
     for client in list_of_clients:
+        state = states[state_index]
         print("Arrivée du client n°{} sur {}".format(step+1,N))
-        #On cherche le pricing correspondant [p1,...,pn]
+
+        if seat_available(flights) == False:
+            print("Plus de siège disponible, plus d'achat.")
+            break
+        else:
+            available = [f.remaining for f in flights]
+            print("Sièges disponibles : {}".format(available))
+
+        #S'il reste des sièges on cherche le pricing correspondant [p1,...,pn]
         pricing = pricing_policy[step][state_index]
-        print(">>>Les prix proposés sont :{}".format(pricing))
+        print(">>>Pricing proposé :{}".format(pricing))
         #On doit mettre à jour le prix proposé de chaque vol
         for i in range(len(flights)):
             flights[i].price = pricing[i]
@@ -65,10 +71,11 @@ def profit(flights,prices,list_of_clients,pricing_policy,v0):
             print(">>>Le client choisit le vol {} pour un prix de {} et une utilité de {}".format(flight_choice,flight.price,u))
             #On modifie l'objet Vol pour 
             flight.sell()
-            #On modifie l'état
-            state[flight] = flight.remaining
-            #On récupère l'index
-            state_index = find_index(state,flights)
+            
+            #On récupère l'index du nouvel état
+            new_state = state.copy()
+            new_state[flight] =  flight.seats - flight.remaining
+            state_index = states.index(new_state)
 
         else:
             print(">>>Le client choisit de ne pas acheter pour une utilité de {}".format(v0))
