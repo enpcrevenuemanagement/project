@@ -3,21 +3,6 @@ from vol import *
 from utility import *
 from sdp import *
 
-### READ CSV DATABASE CLIENT ==> LISTE DE CLIENTS (OBJETS)
-'''with open('client_database') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        line_count = 0
-        for row in csv_reader:
-            if line_count == 0:
-                print(f'Column names are {", ".join(row)}')
-                line_count += 1
-            else:
-                print(f'\t{row[0]} works in the {row[1]} department, and was born in {row[2]}.')
-                line_count += 1
-        print(f'Processed {line_count} lines.')
-
-    return list_of_clients'''
-
 def seat_available(flights):
     for f in flights:
         if f.remaining > 0:
@@ -39,9 +24,11 @@ def profit(flights,prices,list_of_clients,pricing_policy,v0):
     states = States(flights)
     #Etat initial (0,0,....,0)
     state_index = 0
-
+    dic_sales = {}
+    count = 0
     for client in list_of_clients:
         state = states[state_index]
+
         print("Arrivée du client n°{} sur {}".format(step+1,N))
 
         if seat_available(flights) == False:
@@ -69,6 +56,9 @@ def profit(flights,prices,list_of_clients,pricing_policy,v0):
             #print(">>>Le client choisit le vol {} d'utilité {}".format(flight_choice,math.exp(utility(client,flights[flight_choice]))))
             u = utility(client,flight)
             print(">>>Le client choisit le vol {} pour un prix de {} et une utilité de {}".format(flight_choice,flight.price,u))
+            dic_sales[count] = flight.price
+            count+=1
+            
             #On modifie l'objet Vol pour 
             flight.sell()
             
@@ -83,9 +73,8 @@ def profit(flights,prices,list_of_clients,pricing_policy,v0):
 
         #si pas d'achat rien ne change
         step += 1
-
     #Quand on a fini de parcourir la file de clients, on calcule le gain total
-    return sum([f.gain() for f in flights])
+    return sum([f.gain() for f in flights]), dic_sales
 
 
 

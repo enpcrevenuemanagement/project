@@ -25,15 +25,11 @@ def time_decay_utility(C):
 #Fonction utilité du client relative au prix p, selon le temps t (jour d'arrivée)
 #varie entre 1 et 0
 def price_utility(C,V):
-    #return math.exp(-time_decay_utility(C)*V.price)
-    #return 100*math.exp(-0.001*V.price)-50
-    #a = (1-C.time_range)
-    a = 1
-    return max(100-a*V.price,0)
+    return max(100-time_decay_utility(C)*V.price,0)
 
 #Partie déterministe vi(xj) de l'utilité du vol V pour le client C entre 0 et 1
 def utility(C,V):
-    theta = 0
+    theta = 12
     return (price_utility(C,V) + theta * time_utility(C,V)) / (1 + theta)
 
 #Selon une liste de vols Vi flights de longueur n, choix du client C selon loi logit multinomiale
