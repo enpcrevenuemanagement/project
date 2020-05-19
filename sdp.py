@@ -1,5 +1,5 @@
-from  Vol import *
-from Client import *
+from  vol import *
+from client import *
 from demand import *
 from utility import *
 from time import *

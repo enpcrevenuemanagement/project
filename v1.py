@@ -1,7 +1,7 @@
 ### TEST DE L'ALGO V1: N clients equirépartis dans le temps
 
-from Vol import *
-from Client import *
+from vol import *
+from client import *
 from demand import *
 from sdp import *
 from profit import *
@@ -9,9 +9,12 @@ from profit import *
 ### SIMULATEUR D'OFFRE DE VOLS
 
 #Liste des vols
-flights = []
+V1 = Vol((10,30),5)
+V2 = Vol((18,30),5)
+flights = [V1,V2]
+
 #Liste des options de prix possibles
-prices = []
+prices = [1,2,3]
 
 ### SIMULATEUR DE DEMANDE CLIENT SANS REPERE TEMPOREL
 

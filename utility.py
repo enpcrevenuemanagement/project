@@ -2,9 +2,9 @@
 import numpy as np
 import math
 
-from Vol import *
+from vol import *
 from horaire import *
-from Client import *
+from client import *
 
 #Fonction utilité du client relative à l'horaire h du vol (chameau)
 #Fonction entre 0 et 1
