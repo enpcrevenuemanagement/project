@@ -1,12 +1,12 @@
 import math
-
+from horaire import *
 
 #Modélisation des caractéristiques propres à chaque vol 
 #Cela exclut tout ce qui dépend aussi du client (utilité du client pour le vol entre autres ==> utility.py)
 
 class Vol:
 
-    def init(self,t,n):
+    def __init__(self,t,n):
         #Paramètres immuables du vol
         h,m = t
         self.departure_time = Horaire(h,m) #instance de la classe Horaire
@@ -26,6 +26,15 @@ class Vol:
             self.sold.append(self.price)
             self.remaining -= 1
             
-    def profit(self):
+    def gain(self):
         return sum(self.sold)
+
+    def reset(self):
+        #Prix affiché pour le client
+        self.price = 0
+        #Prix des sièges vendus
+        self.sold = []
+        #Nombre de sièges restants
+        self.remaining = self.seats
+
 
