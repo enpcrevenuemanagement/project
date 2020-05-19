@@ -1,7 +1,6 @@
 import math
 from horaire import *
 
-
 #Modélisation des caractéristiques propres à chaque vol 
 #Cela exclut tout ce qui dépend aussi du client (utilité du client pour le vol entre autres ==> utility.py)
 
