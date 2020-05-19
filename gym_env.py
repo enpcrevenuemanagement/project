@@ -34,6 +34,7 @@ class RMenv(gym.Env):
 
     # Espace des observations / états : [0,...,f_K.seats]^K
     self.observation_space = spaces.MultiDiscrete([f.seats for f in flights])
+    
 
   def step(self, action):
     # Action est un sample de l'espace des actions
@@ -41,15 +42,15 @@ class RMenv(gym.Env):
 
     self.current_step += 1
 
-    #Boucle pour vérifier qu'on n'excède pas le nombre de clients N qu'on veut simuler
-    #if self.current_step > N:
-    #
- 
-    #Méthode qui éxécute l'action choisie
+    #Méthode qui éxécute l'action choisie ?
     # self._take_action(action)
+
     #Mettre à jour le prix de chaque vol
     for i in range(self.K):
-        self.flights[i].price = action[i]
+      print(action)
+      print(type(action))
+      """ POURQUOI action est un float au lieu d'être une liste ou un array???"""
+      self.flights[i].price = action[i]
 
     #On tire au sort un client
     ti = i / self.N
@@ -61,27 +62,31 @@ class RMenv(gym.Env):
     if f_choice != -1:
         #On met à jour flights 
         self.flights[f_choice].sell()
-        reward = action
+        #reward = action
+        reward = 1
     else:
         reward = 0
 
     #On renvoie l'état des places vendues
-    observation = [f.seats - f.remaining for f in self.flights]
+    observation = np.array([f.seats - f.remaining for f in self.flights])
     done = (self.current_step == self.N)
 
-    info = "No info"
+    info = {"info 1": "Pas d'info"}
 
     return observation, reward, done, info
   
   
-  def reset(self,N):
+  def reset(self):
+    """
+    Important: the observation must be a numpy array
+    :return: (np.array) 
+    """
 
     self.current_step = 0
     for f in self.flights:
         f.reset()
 
-    observation = [0 for k in range(self.K)]
-    observation = [f.seats - f.remaining for f in self.flights]
+    observation = np.array([0 for k in range(self.K)])
 
     return observation  # reward, done, info can't be included
 

@@ -51,7 +51,7 @@ def choice(C,flights,v0):
     s = sum(utilities_exp)
     
     probabilities = [u/s for u in utilities_exp]
-    print(">>>Le client peut acheter l'un des vols pour les valeurs d'utilité: {} et de probabilité: {}".format(utilities[1:],probabilities[1:]))
+    #print(">>>Le client peut acheter l'un des vols pour les valeurs d'utilité: {} et de probabilité: {}".format(utilities[1:],probabilities[1:]))
     return np.random.choice(choices, 1, p=probabilities)[0]
 
 #proba que le client C choisisse le vol V parmi une liste flights: SEULEMNT SIL  RESTE DES PLACES
