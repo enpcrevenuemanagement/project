@@ -10,9 +10,9 @@ from client import *
 # [0,1] ==> [0,1] 
 
 def time_utility(C,V):
-    #Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire) entre 0 et 24 au format décimal
-    res = lambda h : (5 + math.cos(h-8) - (h-8)*math.cos(h-8))/12.3507
-    return res(V.departure_time.hours-7)
+    #Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire) entre 0 et 1 
+    res = lambda h : 1/3.125 * ( 2 + math.cos(2*math.pi*(h-0.5)) + math.cos(2*math.pi*(h-0.25)/0.5) )
+    return res(V.departure_time.norm)
 
 #Sensibilité au prix avec les 2 paliers comme axel nous a montré
 # [0,1] ==> [0,1]
