@@ -23,13 +23,13 @@ class RMenv(gym.Env):
     self.N = N
 
     # Utilité du choix -1
-    self.v0 = 1
+    self.v0 = 0.1
 
     # Espace des actions : choix du pricing, (R+)^K
     # La valeur max du prix est la valeur pour laquelle la proba de choix descend en dessous d'un seuil eps
-    max_price = 1E4
+    max_price = 1000
     huge = np.inf
-    self.action_space = spaces.Box(low = 1E3, high = max_price, shape=(self.K,), dtype=np.float32)
+    self.action_space = spaces.Box(low = 0, high = max_price, shape=(self.K,), dtype=np.float32)
 
     # Espace des observations / états : [0,...,f_K.seats]^K
     self.observation_space = spaces.MultiDiscrete([f.seats for f in flights])
