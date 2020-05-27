@@ -12,7 +12,7 @@ from client import *
 def time_utility(C,V):
     #Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire) entre 0 et 24 au format décimal
     res = lambda h : (5 + math.cos(h-8) - (h-8)*math.cos(h-8))/12.3507
-    return res(V.departure_time.hours)
+    return res(V.departure_time.hours-7)
 
 #Sensibilité au prix avec les 2 paliers comme axel nous a montré
 # [0,1] ==> [0,1]
