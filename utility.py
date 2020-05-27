@@ -10,9 +10,15 @@ from client import *
 # [0,1] ==> [0,1] 
 
 def time_utility(C,V):
-    #Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire) entre 0 et 1 
-    res = lambda h : 1/3.125 * ( 2 + math.cos(2*math.pi*(h-0.5)) + math.cos(2*math.pi*(h-0.25)/0.5) )
-    return res(V.departure_time.norm)
+    # Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire) entre 0 et 24
+    # Pics à 9 et 19h
+    res = lambda h : math.exp(-1/12*(h-9)**2) + math.exp(-1/12*(h-19)**2)
+    return res(V.departure_time.hours)
+
+def time_utility_chameau(C,V):
+    #Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire) entre 0 et 24
+    res = lambda h : 1/12.3507 * ( 5 + math.cos(h-8) - (h-8)*math.cos(h-8) )
+    return res(V.departure_time.hours)
 
 #Sensibilité au prix avec les 2 paliers comme axel nous a montré
 # [0,1] ==> [0,1]
@@ -31,11 +37,12 @@ def price_utility(C,V):
     return max(1-time_decay_utility(C)*V.price/pmax,0)
 
 #Partie déterministe vi(xj) de l'utilité du vol V pour le client C 
-# ==> [0,1]
+# ==> [0,1/temp] 
 def utility(C,V):
     #Theta est la part représentée par l'utilité horaire vs le prix
-    theta = 0.25
-    return theta * time_utility(C,V) + (1-theta) * price_utility(C,V)
+    theta = 0.5
+    temp = 0.05
+    return (theta * time_utility(C,V) + (1-theta) * price_utility(C,V)) / temp
 
 #Selon une liste de vols Vi flights de longueur n, choix du client C selon loi logit multinomiale
 #On définit la variable de choix yi par la PMF
@@ -56,7 +63,7 @@ def choice(C,flights,v0):
     s = sum(utilities_exp)
     
     probabilities = [u/s for u in utilities_exp]
-    #print(">>>Le client peut acheter l'un des vols pour les valeurs d'utilité: {} et de probabilité: {}".format(utilities[1:],probabilities[1:]))
+    print(">>>Le client peut acheter l'un des vols pour les valeurs d'utilité: {} et de probabilité: {}".format(utilities[1:],probabilities[1:]))
     return np.random.choice(choices, 1, p=probabilities)[0]
 
 #proba que le client C choisisse le vol V parmi une liste flights: SEULEMNT SIL  RESTE DES PLACES
