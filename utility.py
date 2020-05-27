@@ -7,30 +7,35 @@ from horaire import *
 from client import *
 
 #Fonction utilité du client relative à l'horaire h du vol (chameau)
-#Fonction entre 0 et 1
+# [0,1] ==> [0,1] 
 
 def time_utility(C,V):
-    #Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire)
+    #Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire) entre 0 et 24 au format décimal
     res = lambda h : (5 + math.cos(h-8) - (h-8)*math.cos(h-8))/12.3507
     return res(V.departure_time.hours)
 
-#Fonction avec les 2 paliers comme axel nous a montré
+#Sensibilité au prix avec les 2 paliers comme axel nous a montré
 # [0,1] ==> [0,1]
 
 def time_decay_utility(C):
     #Prend en entrée time_range ti entre 0 et 1
     res = lambda a,x : 1 - x + math.sin(a*math.pi*x)/(a*math.pi)
-    return res(3,C.time_range)
+    nb_paliers = 2
+    return res(2+2*nb_paliers,C.time_range)
 
 #Fonction utilité du client relative au prix p, selon le temps t (jour d'arrivée)
-#varie entre 1 et 0
-def price_utility(C,V):
-    return max(100-time_decay_utility(C)*V.price,0)
+# R ==> [0,1]
 
-#Partie déterministe vi(xj) de l'utilité du vol V pour le client C entre 0 et 1
+def price_utility(C,V):
+    pmax = 100
+    return max(1-time_decay_utility(C)*V.price/pmax,0)
+
+#Partie déterministe vi(xj) de l'utilité du vol V pour le client C 
+# ==> [0,1]
 def utility(C,V):
-    theta = 12
-    return (price_utility(C,V) + theta * time_utility(C,V)) / (1 + theta)
+    #Theta est la part représentée par l'utilité horaire vs le prix
+    theta = 0.25
+    return theta * time_utility(C,V) + (1-theta) * price_utility(C,V)
 
 #Selon une liste de vols Vi flights de longueur n, choix du client C selon loi logit multinomiale
 #On définit la variable de choix yi par la PMF
