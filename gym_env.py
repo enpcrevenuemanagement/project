@@ -10,94 +10,102 @@ class RMenv(gym.Env):
   """Custom Environment that follows gym interface"""
   metadata = {'render.modes': ['human']}
 
-  def __init__(self, flights, N):
+  def __init__(self, flights, T, max_price):
     super(RMenv, self).__init__()
     # Define action and observation space
     # They must be gym.spaces objects
 
-    #On stocke flights pour le modifier au fur et à mesure
+    # Horizon temporel
+    self.T = T
+
+    #On stocke flights pour le modifier au fur et à mesure de l'épisode
     self.flights = flights
     self.K = len(flights)
+    #On stocke le pricing modifié au fur et à mesure pour l'étape render
+    self.pricing = []
+    # max price 
+    self.max_price = max_price
 
-    # Nombre de clients par épisode
-    self.N = N
+    # Liste des clients pour l'épisode en cours, à tirer dans la méthode reset
+    self.demand = demand_uniform(self.T)
+    # Nombre de clients
+    self.N = len(self.demand)
 
-    # Utilité du choix -1
-    self.v0 = 0.1
-
-    # Espace des actions : choix du pricing, (R+)^K
-    # La valeur max du prix est la valeur pour laquelle la proba de choix descend en dessous d'un seuil eps
-    max_price = 1000
-    huge = np.inf
-    self.action_space = spaces.Box(low = 0, high = max_price, shape=(self.K,), dtype=np.float32)
-
+    # Espace des actions : choix du pricing, (R+)^K normalisé
+    self.action_space = spaces.Box(low = -1, high = 1, shape=(self.K,), dtype=np.float32)
     # Espace des observations / états : [0,...,f_K.seats]^K
     self.observation_space = spaces.MultiDiscrete([f.seats for f in flights])
 
-    #On stocke le pricing modifié au fur et à mesure pour l'étape render
-    self.pricing = []
-    
+
+  def get_choice(self,pricing):
+    #Avancer dans la liste de clients et sortir un choix
+
+    #Mettre à jour le prix de chaque vol
+    for j in range(self.K):
+      #print(action)
+      self.flights[j].price = pricing[j]
+
+    #On tire un client à partir de la liste donnée pour l'épisode
+    print("#")
+    print(len(self.demand))
+    print(self.N)
+    print(self.current_step)
+    C = self.demand[0]
+
+    #On obtient choice, qui donne l'index du vol choisi ou -1 si pas d'achat
+    return choice(C,self.flights)
+
 
   def step(self, action):
-    # Action est un sample de l'espace des actions
-    # C'est donc un vecteur de (R+)^K
 
     self.current_step += 1
 
+    # Action est la valeur du pricing choisi entre -1 et 1
+    pricing = (1+action)*self.max_price/2
     # On met à jour le pricing pour l'étape render
-    self.pricing = action
+    self.pricing = pricing
 
-    #Méthode qui éxécute l'action choisie ?
-    # self._take_action(action)
-
-    #Mettre à jour le prix de chaque vol
-    for i in range(self.K):
-      #print(action)
-      self.flights[i].price = action[i]
-
-    #On tire au sort un client
-    ti = i / self.N
-    C = Client(ti)
-
-    #On obtient choice, qui donne l'index du vol choisi ou -1 si pas d'achat
-    try:
-      f_choice = choice(C,self.flights,self.v0)
-    except:
-      # Si erreur 
-      f_choice = -1
-      print("Erreur de calcul du choix client pour le pricing suivant: {}".format(action))
-      exit()
+    f_choice = self.get_choice(self.pricing)
 
     if f_choice != -1:
         #On met à jour flights 
         self.flights[f_choice].sell()
-        reward = float(action[f_choice])
+        reward = float(pricing[f_choice])
     else:
         reward = 0
 
+    #print("Choix = {}".format(f_choice))
+
+
     #On renvoie l'état des places vendues
     observation = np.array([f.seats - f.remaining for f in self.flights])
+    #On termine au bout de la file de clients
     done = (self.current_step == self.N)
-
     info = {"info 1": "Pas d'info"}
 
+
     return observation, reward, done, info
-  
-  
-  def reset(self):
+
+    def reset(self):
     """
     Important: the observation must be a numpy array
     :return: (np.array) 
     """
+    #C'est l'état de l'environnement au début d'un épisode
 
     self.current_step = 0
+
     for f in self.flights:
         f.reset()
+      
+    #self.demand = demand_uniform(self.T)
+    #self.N = len(self.demand)
 
     observation = np.array([0 for k in range(self.K)])
 
     return observation  # reward, done, info can't be included
-
+  
+  
   def render(self, mode='human'):
       print("Remplissage {}".format([f.seats - f.remaining for f in self.flights]))
       print("Pricing {}".format(self.pricing))

@@ -3,7 +3,6 @@ import numpy as np
 import math
 
 from vol import *
-from horaire import *
 from client import *
 
 #Fonction utilité du client relative à l'horaire h du vol (chameau)
@@ -13,11 +12,6 @@ def time_utility(C,V):
     # Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire) entre 0 et 24
     # Pics à 9 et 19h
     res = lambda h : math.exp(-1/12*(h-9)**2) + math.exp(-1/12*(h-19)**2)
-    return res(V.departure_time.hours)
-
-def time_utility_chameau(C,V):
-    #Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire) entre 0 et 24
-    res = lambda h : 1/12.3507 * ( 5 + math.cos(h-8) - (h-8)*math.cos(h-8) )
     return res(V.departure_time.hours)
 
 #Sensibilité au prix avec les 2 paliers comme axel nous a montré
@@ -34,37 +28,33 @@ def time_decay_utility(C):
 
 def price_utility(C,V):
     pmax = 100
-    return max(1-time_decay_utility(C)*V.price/pmax,0)
+    #return max(1-time_decay_utility(C)*V.price/pmax,0)
+    return 1-time_decay_utility(C)*V.price/pmax
 
 #Partie déterministe vi(xj) de l'utilité du vol V pour le client C 
 # ==> [0,1/temp] 
 def utility(C,V):
-    #Theta est la part représentée par l'utilité horaire vs le prix
-    theta = 0.5
-    temp = 0.05
-    return (theta * time_utility(C,V) + (1-theta) * price_utility(C,V)) / temp
+    return (C.theta * time_utility(C,V) + (1-C.theta) * price_utility(C,V))
 
 #Selon une liste de vols Vi flights de longueur n, choix du client C selon loi logit multinomiale
 #On définit la variable de choix yi par la PMF
 #v0 est l'utilité du choix -1
 
-def choice(C,flights,v0):
+def choice(C,flights):
     n = len(flights)
     #0 à n-1 pour les n vols et -1 si pas d'achat
     choices = [-1]
-    utilities = [v0]
-    utilities_exp = [math.exp(v0)]
+    u = [C.v0/C.temp]
+
     for i in range(n):
         flight = flights[i]
         if flight.remaining > 0:
-            utilities.append(utility(C,flight))
-            utilities_exp.append(math.exp(utility(C,flight)))
+            u.append( utility(C,flight) / C.temp )
             choices.append(i)
-    s = sum(utilities_exp)
-    
-    probabilities = [u/s for u in utilities_exp]
+
+    probas = np.exp(u)/sum(np.exp(u))
     #print(">>>Le client peut acheter l'un des vols pour les valeurs d'utilité: {} et de probabilité: {}".format(utilities[1:],probabilities[1:]))
-    return np.random.choice(choices, 1, p=probabilities)[0]
+    return np.random.choice(choices, 1, p=probas)[0]
 
 #proba que le client C choisisse le vol V parmi une liste flights: SEULEMNT SIL  RESTE DES PLACES
 #v0 est l'utilité du choix 0

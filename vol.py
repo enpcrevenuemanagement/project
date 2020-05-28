@@ -1,23 +1,36 @@
 import math
-from horaire import *
+
+#Definition d'un format pour représenter l'horaire
+class Horaire:
+
+    def __init__(self,h,m):
+        #Nombre d'heures au format décimal entre minuit et l'horaire considéré
+        self.hours=h+m/60
+        #Nombre de minutes entre minuit et l'horaire considéré
+        self.minutes=h*60+m
+        #Valeur normalisée entre 0 et 1
+        self.norm = self.hours/24
+
+    def __str__(self):
+        return str(self.minutes//60)+":"+str(self.minutes%60)
 
 #Modélisation des caractéristiques propres à chaque vol 
-#Cela exclut tout ce qui dépend aussi du client (utilité du client pour le vol entre autres ==> utility.py)
 
 class Vol:
 
-    def __init__(self,t,n):
-        #Paramètres immuables du vol
-        h,m = t
-        self.departure_time = Horaire(h,m) #instance de la classe Horaire
-        self.seats = n #Type int
+    def __init__(self,departure_time,seats):
+        #Caractéristiques immuables du vol
+        self.departure_time = departure_time #instance de la classe Horaire
+        self.seats = seats #Type int
+
         #Variables
+
         #Prix affiché pour le client
         self.price = 0
         #Prix des sièges vendus
         self.sold = []
         #Nombre de sièges restants
-        self.remaining = n
+        self.remaining = seats
  
 
     #Méthode pour mettre à jour vol lorsqu'une place est vendue
