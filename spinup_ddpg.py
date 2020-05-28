@@ -16,7 +16,7 @@ V2 = Vol(h2,10)
 flights = [V2]
 
 # Nombre de clients dans la file = horizon temporel (longueur d'un épisode)
-T = 20
+T = 10
 max_price = 100
 
 # On construit l'environnement Gym
@@ -30,6 +30,28 @@ check_env(env, warn=True)
 env_fn = lambda : env
 
 # On run l'algo
-spinup.ddpg_tf1(env_fn, ac_kwargs={}, steps_per_epoch=4000, epochs=100, replay_size=1000000, gamma=0.99, polyak=0.995, 
-pi_lr=0.001, q_lr=0.001, batch_size=100, start_steps=10000, update_after=1000, update_every=50, 
-act_noise=0.1, num_test_episodes=1, max_ep_len=1000, logger_kwargs={}, save_freq=1)
+spinup.ddpg_tf1(env_fn, 
+#actor_critic=<function mlp_actor_critic>
+ac_kwargs={}, 
+#seed=0,
+steps_per_epoch=4000, 
+# epochs
+epochs=100, 
+replay_size=1000000, 
+#Discount
+gamma=0.99, 
+polyak=0.995, 
+#Learning rates
+pi_lr=0.001, 
+q_lr=0.001, 
+batch_size=100, 
+start_steps=10000, 
+update_after=1000, 
+update_every=50, 
+act_noise=0.1, 
+# Num test episodes ??
+num_test_episodes=1,
+# Episode length (si done == false tout le temps)
+max_ep_len=1000, 
+logger_kwargs={}, 
+save_freq=1)

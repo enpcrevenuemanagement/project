@@ -31,6 +31,9 @@ class RMenv(gym.Env):
     # Nombre de clients
     self.N = len(self.demand)
 
+    #current step 
+    self.current_step = 0 
+
     # Espace des actions : choix du pricing, (R+)^K normalisé
     self.action_space = spaces.Box(low = -1, high = 1, shape=(self.K,), dtype=np.float32)
     # Espace des observations / états : [0,...,f_K.seats]^K
@@ -42,23 +45,20 @@ class RMenv(gym.Env):
 
     #Mettre à jour le prix de chaque vol
     for j in range(self.K):
-      #print(action)
       self.flights[j].price = pricing[j]
 
     #On tire un client à partir de la liste donnée pour l'épisode
-    print("#")
-    print(len(self.demand))
-    print(self.N)
-    print(self.current_step)
-    C = self.demand[0]
+    try:
+      C = self.demand[self.current_step]
+      f_choice = choice(C,self.flights)
+    except:
+      f_choice = -1
 
     #On obtient choice, qui donne l'index du vol choisi ou -1 si pas d'achat
-    return choice(C,self.flights)
+    return f_choice
 
 
   def step(self, action):
-
-    self.current_step += 1
 
     # Action est la valeur du pricing choisi entre -1 et 1
     pricing = (1+action)*self.max_price/2
@@ -76,17 +76,18 @@ class RMenv(gym.Env):
 
     #print("Choix = {}".format(f_choice))
 
+    self.current_step += 1
 
     #On renvoie l'état des places vendues
     observation = np.array([f.seats - f.remaining for f in self.flights])
     #On termine au bout de la file de clients
-    done = (self.current_step == self.N)
+    done = (self.current_step >= self.N)
     info = {"info 1": "Pas d'info"}
 
 
     return observation, reward, done, info
 
-    def reset(self):
+  def reset(self):
     """
     Important: the observation must be a numpy array
     :return: (np.array) 
@@ -98,8 +99,8 @@ class RMenv(gym.Env):
     for f in self.flights:
         f.reset()
       
-    #self.demand = demand_uniform(self.T)
-    #self.N = len(self.demand)
+    self.demand = demand_uniform(self.T)
+    self.N = len(self.demand)
 
     observation = np.array([0 for k in range(self.K)])
 
