@@ -40,6 +40,14 @@ class RMenv(gym.Env):
     self.action_space = spaces.Box(low = -1, high = 1, shape=(self.K,), dtype=np.float32)
     # Espace des observations / états : [0,...,f_K.seats]^K
     self.observation_space = spaces.MultiDiscrete([f.seats for f in flights])
+  
+  def full(self):
+    res = True
+
+    for f in self.flights:
+      if f.remaining > 0:
+        res = False
+    return res
 
 
   def get_choice(self,pricing):
@@ -93,7 +101,7 @@ class RMenv(gym.Env):
     #On renvoie l'état des places vendues
     observation = np.array([f.seats - f.remaining for f in self.flights])
     #On termine au bout de la file de clients
-    done = (self.current_step >= self.N)
+    done = (self.current_step >= self.N) or self.full()
     info = {"Choix": f_choice , "Prix": reward}
 
 
