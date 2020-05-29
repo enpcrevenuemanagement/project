@@ -104,6 +104,8 @@ class RMenv(gym.Env):
     done = (self.current_step >= self.N) or self.full()
     info = {"Choix": f_choice , "Prix": reward}
 
+    # Rescale reward ???
+    reward = reward / self.max_price
 
     return observation, reward, done, info
 

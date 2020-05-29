@@ -15,11 +15,11 @@ class Client:
 
         #Jour d'arrivée du client normalisée entre 0 et 1
         self.time_range = ti
-        #Dans le futur: autres paramètres distinctifs 
+        #Type de client
         self.fare = "Leisure"
-        #Température pour le softmax
-        self.temp = 0.25
-        #Utilité du choix zéro 
+        #Température pour le softmax pour ce type
+        self.temp = 0.01
+        #Utilité du choix zéro pour ce type
         self.v0 = 0.2
 
     def theta(self):
