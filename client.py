@@ -18,19 +18,19 @@ class Client:
         #Dans le futur: autres paramètres distinctifs 
         self.fare = "Leisure"
         #Température pour le softmax
-        self.temp = 0.25
+        self.temp = 0.1
         #Utilité du choix zéro 
         self.v0 = 0.2
 
     def theta(self):
-        # Renvoie une sensibilité entre 1 et final en focntion de ti entre 0 et 1
-        #Sensibilité au prix avec les 2 paliers comme axel nous a montré
+        # Renvoie une sensibilité au prix entre start et final en focntion de ti entre 0 et 1
+        # Sensibilité au prix avec les 2 paliers comme axel nous a montré
         # [0,1] ==> [0,1]
         nb_paliers = 2
-        #Theta business
-        start = 0.9
         #Theta touriste
-        final = 0.1
+        start = 0.9
+        #Theta business
+        final = 0.2
 
         res = lambda a,x : start + (1-final) * (math.sin(a*math.pi*x)/(a*math.pi) - x)
         
