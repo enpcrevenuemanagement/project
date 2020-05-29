@@ -54,8 +54,15 @@ class RMenv(gym.Env):
     except:
       f_choice = -1
 
+    if f_choice != -1:
+        #On met à jour flights 
+        self.flights[f_choice].sell()
+        reward = float(pricing[f_choice])
+    else:
+        reward = 0
+
     #On obtient choice, qui donne l'index du vol choisi ou -1 si pas d'achat
-    return f_choice
+    return f_choice, reward
 
 
   def step(self, action):
@@ -65,16 +72,7 @@ class RMenv(gym.Env):
     # On met à jour le pricing pour l'étape render
     self.pricing = pricing
 
-    f_choice = self.get_choice(self.pricing)
-
-    if f_choice != -1:
-        #On met à jour flights 
-        self.flights[f_choice].sell()
-        reward = float(pricing[f_choice])
-    else:
-        reward = 0
-
-    #print("Choix = {}".format(f_choice))
+    f_choice, reward = self.get_choice(self.pricing)
 
     self.current_step += 1
 
@@ -82,7 +80,7 @@ class RMenv(gym.Env):
     observation = np.array([f.seats - f.remaining for f in self.flights])
     #On termine au bout de la file de clients
     done = (self.current_step >= self.N)
-    info = {"info 1": "Pas d'info"}
+    info = {"Choix": f_choice , "Prix": reward}
 
 
     return observation, reward, done, info
@@ -104,7 +102,7 @@ class RMenv(gym.Env):
 
     observation = np.array([0 for k in range(self.K)])
 
-    return observation  # reward, done, info can't be included
+    return observation
   
   
   def render(self, mode='human'):

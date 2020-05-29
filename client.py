@@ -17,9 +17,24 @@ class Client:
         self.time_range = ti
         #Dans le futur: autres paramètres distinctifs 
         self.fare = "Leisure"
-        self.theta = 0.25
-        self.temp = 0.05
-        self.v0 = 0.5
+        #Température pour le softmax
+        self.temp = 0.25
+        #Utilité du choix zéro 
+        self.v0 = 0.2
+
+    def theta(self):
+        # Renvoie une sensibilité entre 1 et final en focntion de ti entre 0 et 1
+        #Sensibilité au prix avec les 2 paliers comme axel nous a montré
+        # [0,1] ==> [0,1]
+        nb_paliers = 2
+        #Theta business
+        start = 0.9
+        #Theta touriste
+        final = 0.1
+
+        res = lambda a,x : start + (1-final) * (math.sin(a*math.pi*x)/(a*math.pi) - x)
+        
+        return res(2+2*nb_paliers,self.time_range)
 
 class Fareclass:
 
@@ -65,7 +80,7 @@ def demand_uniform(time_horizon):
     """ fonction qui renvoie une liste de clients à d'un horizon temporel de T jours avec 1 client par jour """
 
     list_of_clients=[]
-    #On parcourt les jours de 0 à time_horizon
+    #On parcourt les jours de 1 à time_horizon
     for day in range(1,time_horizon+1):
 
         t = day/time_horizon
@@ -73,7 +88,6 @@ def demand_uniform(time_horizon):
         list_of_clients.append(c)
 
     return list_of_clients
-
 
 
     

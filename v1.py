@@ -21,15 +21,10 @@ flights = [V1,V2]
 prices = [20, 30, 50, 80, 90, 100, 200, 250, 300, 350, 400]
 total_seats = sum([f.seats for f in flights])
 
-
 ### SIMULATEUR DE DEMANDE CLIENT SANS REPERE TEMPOREL
 
 N = 15
-list_of_clients=[]
-for i in range(1,N+1):
-    ti = i/N
-    C = Client(ti)
-    list_of_clients.append(C)
+list_of_clients = demand_uniform(N)
 
 ### SDP: POLITIQUE DE PRIX
 
