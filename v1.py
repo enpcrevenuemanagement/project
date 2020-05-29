@@ -19,7 +19,7 @@ flights = [V1,V2]
 prices = [50,55,60,65, 67, 69, 71, 73, 75, 77, 79, 81, 83, 85, 90, 95, 100]
 total_seats = sum([f.seats for f in flights])
 #v0 
-v0 = 3
+v0 = 0.2
 
 ### SIMULATEUR DE DEMANDE CLIENT SANS REPERE TEMPOREL
 

@@ -13,7 +13,7 @@ h2 = Horaire(19,0)
 V1 = Vol(h1,10)
 V2 = Vol(h2,10)
 
-flights = [V2]
+flights = [V1]
 
 # horizon temporel (longueur d'un épisode)
 T = 10
