@@ -29,7 +29,8 @@ def price_utility(C,V):
 #Partie déterministe vi(xj) de l'utilité du vol V pour le client C 
 # ==> [0,1/temp] 
 def utility(C,V):
-    return (C.theta() * time_utility(C,V) + ( 1 - C.theta() ) * price_utility(C,V))
+    print(C.theta())
+    return (C.theta() * price_utility(C,V) + ( 1 - C.theta() ) * time_utility(C,V))
 
 #Selon une liste de vols Vi flights de longueur n, choix du client C selon loi logit multinomiale
 #On définit la variable de choix yi par la PMF
@@ -49,6 +50,7 @@ def choice(C,flights,verbose):
 
     probas = np.exp(u)/sum(np.exp(u))
     if verbose == 1:
+        print(">>> Utilités : {}".format(u))
         print(">>> Probabilités : {}".format(probas))
     f_choice = np.random.choice(choices, 1, p=probas)[0]
     return f_choice

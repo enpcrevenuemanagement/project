@@ -19,7 +19,7 @@ flights = [V1,V2]
 T = 50
 
 # Range d'exploration du prix
-max_price = 100
+max_price = 1000
 
 # On construit l'environnement Gym
 env = RMenv(flights, T, max_price, verbose = 1)
