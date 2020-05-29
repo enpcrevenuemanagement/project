@@ -35,7 +35,7 @@ def utility(C,V):
 #On définit la variable de choix yi par la PMF
 #v0 est l'utilité du choix -1
 
-def choice(C,flights):
+def choice(C,flights,verbose):
     n = len(flights)
     #0 à n-1 pour les n vols et -1 si pas d'achat
     choices = [-1]
@@ -48,5 +48,7 @@ def choice(C,flights):
             choices.append(i)
 
     probas = np.exp(u)/sum(np.exp(u))
-    #print(">>>Le client peut acheter l'un des vols pour les valeurs d'utilité: {} et de probabilité: {}".format(utilities[1:],probabilities[1:]))
-    return np.random.choice(choices, 1, p=probas)[0]
+    if verbose == 1:
+        print(">>> Probabilités : {}".format(probas))
+    f_choice = np.random.choice(choices, 1, p=probas)[0]
+    return f_choice

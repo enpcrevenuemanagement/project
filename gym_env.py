@@ -10,10 +10,12 @@ class RMenv(gym.Env):
   """Custom Environment that follows gym interface"""
   metadata = {'render.modes': ['human']}
 
-  def __init__(self, flights, T, max_price):
+  def __init__(self, flights, T, max_price, verbose = 0):
     super(RMenv, self).__init__()
     # Define action and observation space
     # They must be gym.spaces objects
+
+    self.verbose = verbose
 
     # Horizon temporel
     self.T = T
@@ -42,6 +44,8 @@ class RMenv(gym.Env):
 
   def get_choice(self,pricing):
     #Avancer dans la liste de clients et sortir un choix
+    if self.verbose == 1:
+      print(">>> Pricing proposé : {}".format(pricing))
 
     #Mettre à jour le prix de chaque vol
     for j in range(self.K):
@@ -50,8 +54,9 @@ class RMenv(gym.Env):
     #On tire un client à partir de la liste donnée pour l'épisode
     try:
       C = self.demand[self.current_step]
-      f_choice = choice(C,self.flights)
+      f_choice = choice(C,self.flights,self.verbose)
     except:
+      print("Choice error for step {}".format(self.current_step))
       f_choice = -1
 
     if f_choice != -1:
@@ -60,6 +65,12 @@ class RMenv(gym.Env):
         reward = float(pricing[f_choice])
     else:
         reward = 0
+
+    if self.verbose == 1:
+      print(">>> Choix : {}".format(f_choice))
+      print(">>> Gain : {}".format(reward))
+      print(">>> Gain total épisode en cours : {}".format( sum( [f.gain() for f in self.flights]) ))
+      print("Remplissage {}".format([f.seats - f.remaining for f in self.flights]))
 
     #On obtient choice, qui donne l'index du vol choisi ou -1 si pas d'achat
     return f_choice, reward
@@ -71,6 +82,9 @@ class RMenv(gym.Env):
     pricing = (1+action)*self.max_price/2
     # On met à jour le pricing pour l'étape render
     self.pricing = pricing
+
+    if self.verbose == 1:
+      print("Client {} sur {}".format(self.current_step+1,self.N))
 
     f_choice, reward = self.get_choice(self.pricing)
 

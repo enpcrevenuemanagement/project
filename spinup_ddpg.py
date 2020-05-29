@@ -13,22 +13,22 @@ h2 = Horaire(19,0)
 V1 = Vol(h1,10)
 V2 = Vol(h2,10)
 
-flights = [V1]
+flights = [V1,V2]
 
-# horizon temporel (longueur d'un épisode)
-T = 10
+# horizon temporel (longueur d'un épisode = nombre de clients si demande equirepartie)
+T = 50
 
-max_price = 1000
+# Range d'exploration du prix
+max_price = 100
 
 # On construit l'environnement Gym
+env = RMenv(flights, T, max_price, verbose = 1)
+# On donne le constructeur de l'environnement Gym
+env_fn = lambda : env
 
 # If the environment don't follow the interface, an error will be thrown
 from stable_baselines.common.env_checker import check_env
-env = RMenv(flights, T, max_price)
 check_env(env, warn=True)
-
-# On donne le constructeur de l'environnement Gym
-env_fn = lambda : env
 
 # On run l'algo
 spinup.ddpg_tf1(env_fn, 
