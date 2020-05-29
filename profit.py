@@ -48,7 +48,7 @@ def profit(flights,prices,list_of_clients,pricing_policy):
         #Le client prend une décision
         #flight_choice = -1 si pas d'achat, i si achat vol i
         #Choix seulement s'il reste de la place !
-        flight_choice = choice(client,flights)
+        flight_choice = choice(client,flights, verbose=1)
 
         #Si achat
         if flight_choice != -1:
