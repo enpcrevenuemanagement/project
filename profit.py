@@ -9,7 +9,7 @@ def seat_available(flights):
             return True
     return False
 
-def profit(flights,prices,list_of_clients,pricing_policy,v0):
+def profit(flights,prices,list_of_clients,pricing_policy):
 
     #Si on a trop de clients, la politique de prix est invalide ==> ERREUR
     N = len(list_of_clients)
@@ -48,7 +48,7 @@ def profit(flights,prices,list_of_clients,pricing_policy,v0):
         #Le client prend une décision
         #flight_choice = -1 si pas d'achat, i si achat vol i
         #Choix seulement s'il reste de la place !
-        flight_choice = choice(client,flights,v0)
+        flight_choice = choice(client,flights)
 
         #Si achat
         if flight_choice != -1:
@@ -68,7 +68,7 @@ def profit(flights,prices,list_of_clients,pricing_policy,v0):
             state_index = states.index(new_state)
 
         else:
-            print(">>>Le client choisit de ne pas acheter pour une utilité de {}".format(v0))
+            print(">>>Le client choisit de ne pas acheter pour une utilité de {}".format(client.v0))
 
 
         #si pas d'achat rien ne change
