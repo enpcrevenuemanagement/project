@@ -25,8 +25,8 @@ def Pricing_options(prices, flights):
 
 #proba que le client C choisisse le vol V parmi une liste flights: SEULEMNT SIL  RESTE DES PLACES
 #v0 est l'utilité du choix 0
-def proba_c_v(C,V,flights,vols_pleins,v0): 
-    utilities = [math.exp(v0)]
+def proba_c_v(C,V,flights,vols_pleins): 
+    utilities = [math.exp(C.v0)]
     for flight in flights:
         if flight not in vols_pleins:
             utilities.append(math.exp(utility(C,flight)))
@@ -35,13 +35,13 @@ def proba_c_v(C,V,flights,vols_pleins,v0):
     return probability
 
 #probabilité de ne chosisir aucun vol
-def proba_v0(C,flights,vols_pleins, v0): 
-    utilities = [math.exp(v0)]
+def proba_v0(C,flights,vols_pleins): 
+    utilities = [math.exp(C.v0)]
     for flight in flights:
         if flight not in vols_pleins:
             utilities.append(math.exp(utility(C,flight)))
     s = sum(utilities)
-    probability = math.exp(v0)/s
+    probability = math.exp(C.v0)/s
     return probability
 
 def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
