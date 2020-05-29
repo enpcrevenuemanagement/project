@@ -70,7 +70,7 @@ class RMenv(gym.Env):
       print(">>> Choix : {}".format(f_choice))
       print(">>> Gain : {}".format(reward))
       print(">>> Gain total épisode en cours : {}".format( sum( [f.gain() for f in self.flights]) ))
-      print("Remplissage {}".format([f.seats - f.remaining for f in self.flights]))
+      print(">>> Remplissage {}".format([f.seats - f.remaining for f in self.flights]))
 
     #On obtient choice, qui donne l'index du vol choisi ou -1 si pas d'achat
     return f_choice, reward
