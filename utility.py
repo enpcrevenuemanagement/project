@@ -17,10 +17,14 @@ def time_utility(C,V):
 #Sensibilité au prix avec les 2 paliers comme axel nous a montré
 # [0,1] ==> [0,1]
 
-def time_decay_utility(C):
+def price_sensitivity(C):
     #Prend en entrée time_range ti entre 0 et 1
-    res = lambda a,x : 1 - x + math.sin(a*math.pi*x)/(a*math.pi)
+
     nb_paliers = 2
+    #Utilité finale (business)
+    final = 0.1
+    res = lambda a,x : 1 + (1-final) * (math.sin(a*math.pi*x)/(a*math.pi) - x)
+    
     return res(2+2*nb_paliers,C.time_range)
 
 #Fonction utilité du client relative au prix p, selon le temps t (jour d'arrivée)
@@ -29,7 +33,7 @@ def time_decay_utility(C):
 def price_utility(C,V):
     pmax = 100
     #return max(1-time_decay_utility(C)*V.price/pmax,0)
-    return 1-time_decay_utility(C)*V.price/pmax
+    return 1-price_sensitivity(C)*V.price/pmax
 
 #Partie déterministe vi(xj) de l'utilité du vol V pour le client C 
 # ==> [0,1/temp] 
