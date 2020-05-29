@@ -24,11 +24,7 @@ v0 = 3
 ### SIMULATEUR DE DEMANDE CLIENT SANS REPERE TEMPOREL
 
 N = 15
-list_of_clients=[]
-for i in range(1,N+1):
-    ti = i/N
-    C = Client(ti)
-    list_of_clients.append(C)
+list_of_clients = demand_uniform(N)
 
 ### SDP: POLITIQUE DE PRIX
 

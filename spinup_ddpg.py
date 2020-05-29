@@ -15,9 +15,10 @@ V2 = Vol(h2,10)
 
 flights = [V2]
 
-# Nombre de clients dans la file = horizon temporel (longueur d'un épisode)
+# horizon temporel (longueur d'un épisode)
 T = 10
-max_price = 100
+
+max_price = 1000
 
 # On construit l'environnement Gym
 

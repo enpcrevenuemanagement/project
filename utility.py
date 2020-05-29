@@ -10,35 +10,26 @@ from client import *
 
 def time_utility(C,V):
     # Prend en entrée l'horaire normalisé dans la journée (cf classe Horaire) entre 0 et 24
-    # Pics à 9 et 19h
+    # Pics d'utilité 1 à 9 et 19h
+    # Utilité 0.25 à 5h, 14h et 23h
+
     res = lambda h : math.exp(-1/12*(h-9)**2) + math.exp(-1/12*(h-19)**2)
     return res(V.departure_time.hours)
-
-#Sensibilité au prix avec les 2 paliers comme axel nous a montré
-# [0,1] ==> [0,1]
-
-def price_sensitivity(C):
-    #Prend en entrée time_range ti entre 0 et 1
-
-    nb_paliers = 2
-    #Utilité finale (business)
-    final = 0.1
-    res = lambda a,x : 1 + (1-final) * (math.sin(a*math.pi*x)/(a*math.pi) - x)
-    
-    return res(2+2*nb_paliers,C.time_range)
 
 #Fonction utilité du client relative au prix p, selon le temps t (jour d'arrivée)
 # R ==> [0,1]
 
 def price_utility(C,V):
-    pmax = 100
-    #return max(1-time_decay_utility(C)*V.price/pmax,0)
-    return 1-price_sensitivity(C)*V.price/pmax
+
+    price_scale = 100
+
+    #utilité négative
+    return 1 - V.price / price_scale
 
 #Partie déterministe vi(xj) de l'utilité du vol V pour le client C 
 # ==> [0,1/temp] 
 def utility(C,V):
-    return (C.theta * time_utility(C,V) + (1-C.theta) * price_utility(C,V))
+    return (C.theta() * time_utility(C,V) + ( 1 - C.theta() ) * price_utility(C,V))
 
 #Selon une liste de vols Vi flights de longueur n, choix du client C selon loi logit multinomiale
 #On définit la variable de choix yi par la PMF
