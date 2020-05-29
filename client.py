@@ -18,7 +18,7 @@ class Client:
         #Dans le futur: autres paramètres distinctifs 
         self.fare = "Leisure"
         #Température pour le softmax
-        self.temp = 0.1
+        self.temp = 0.25
         #Utilité du choix zéro 
         self.v0 = 0.2
 
@@ -30,9 +30,9 @@ class Client:
         #Theta touriste
         start = 0.9
         #Theta business
-        final = 0.2
+        final = 0.1
 
-        res = lambda a,x : start + (1-final) * (math.sin(a*math.pi*x)/(a*math.pi) - x)
+        res = lambda a,x : start + (start - final) * (math.sin(a*math.pi*x)/(a*math.pi) - x)
         
         return res(2+2*nb_paliers,self.time_range)
 
