@@ -1,6 +1,5 @@
 from vol import *
 from client import *
-from demand import *
 from utility import *
 from time import *
 import numpy 
@@ -30,7 +29,7 @@ def find_index(state,flights):
     return int(sum([state[flights[i]]*np.prod(seats[i+1:]) for i in range(len(flights))]))
 
 
-def SDP(prices, flights, N, v0): #prix possibles, vols, nombre de clients
+def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
     #définition des états possibles {v1:places vendues, v2:places vendues, ...}
     states = States(flights)
     #définition du pricing :  [p1,p2,...]
@@ -65,11 +64,11 @@ def SDP(prices, flights, N, v0): #prix possibles, vols, nombre de clients
                     if f not in vols_pleins:
                         new_state = state.copy()
                         new_state[f] += 1 #nouvel état qui correspond à une place de plus vendue sur ce vol
-                        esp += proba_c_v(C,f,flights,vols_pleins,v0)*(f.price + F[t+1][states.index(new_state)])
+                        esp += proba_c_v(C,f,flights,vols_pleins)*(f.price + F[t+1][states.index(new_state)])
 
                 #cas où le client t ne choisit aucun vol
                 #p0(t) la proba associée, on reste dans le même état à t+1 et pas de bénéfices engendrés à t
-                esp += proba_v0(C,flights,vols_pleins,v0)*F[t+1][states.index(state)]
+                esp += proba_v0(C,flights,vols_pleins)*F[t+1][states.index(state)]
                 
     #nécessité de passer en backward : des qu'on calcule le nouvel état qui correspond à l'issue de la vente on doit savoir quel est le resultat de l'espérance
     #des gains de ce nouvel état de t+1 à n pour calculer l'espérance de gains globale de t à n.
