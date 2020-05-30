@@ -16,7 +16,7 @@ V2 = Vol(h2,10)
 flights = [V1]
 
 # horizon temporel (longueur d'un épisode = nombre de clients si demande equirepartie)
-T = 10
+T = 1
 
 # Range d'exploration du prix
 max_price = 200
@@ -32,43 +32,44 @@ check_env(env, warn=True)
 
 # On run l'algo
 spinup.ddpg_tf1(env_fn, 
-#actor_critic=<function mlp_actor_critic>
-#ac_kwargs={}, 
-#seed=0,
 
-steps_per_epoch=4000, 
-
+""" Hyperparamètres à tuner"""
 # epochs
-epochs=100, 
-
-replay_size=1000000, 
-
-#Discount
-gamma=0.99, 
-
-
-polyak=0.995, 
-
-#Learning rates
-pi_lr=0.01, 
-q_lr=0.01, 
-
-# Number of episodes par epoch ??
-batch_size=100, 
-
-#Uniform start steps
-start_steps=10000, 
-update_after=1000, 
-update_every=50, 
-# Bruit gaussien random de std dev = act_noise
-act_noise=1, 
+epochs=100,
+steps_per_epoch=4000,
 
 # Num test episodes ??
-num_test_episodes=1,
+num_test_episodes=20,
 
+# Minibatch
+batch_size=100, 
+
+#Learning rates
+pi_lr=0.001, 
+q_lr=0.001, 
+
+# Bruit gaussien random de std dev = act_noise
+act_noise=0.1, 
+#Discount = 1 for finite horizon
+gamma=0.99, 
+#Uniform start steps
+start_steps=1000, 
+
+
+replay_size=1000000, 
+polyak=0.995, 
+
+#Update 
+update_after=1000, 
+update_every=50, 
 # Episode length (si done == false tout le temps)
 # en pratique doit etre supérieur à min(total seats, total clients)
 max_ep_len=1000, 
 
 logger_kwargs={}, 
-save_freq=1)
+save_freq=1
+#actor_critic=<function mlp_actor_critic>
+#ac_kwargs={}, 
+#seed=0,
+
+)

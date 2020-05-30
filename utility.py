@@ -39,7 +39,7 @@ def choice(C,flights,verbose):
     n = len(flights)
     #0 à n-1 pour les n vols et -1 si pas d'achat
     choices = [-1]
-    u = [C.v0/C.temp]
+    u = [C.v0 / C.temp]
 
     for i in range(n):
         flight = flights[i]

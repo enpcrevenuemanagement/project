@@ -105,7 +105,7 @@ class RMenv(gym.Env):
     info = {"Choix": f_choice , "Prix": reward}
 
     # Rescale reward ???
-    reward = reward / self.max_price
+    reward = reward / (self.max_price*self.N)
 
     return observation, reward, done, info
 
