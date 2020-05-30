@@ -23,6 +23,7 @@ class RMenv(gym.Env):
     #On stocke flights pour le modifier au fur et à mesure de l'épisode
     self.flights = flights
     self.K = len(flights)
+    self.total_seats = sum([f.seats for f in self.flights])
     #On stocke le pricing modifié au fur et à mesure pour l'étape render
     self.pricing = []
     # max price 
@@ -35,6 +36,8 @@ class RMenv(gym.Env):
 
     #current step 
     self.current_step = 0 
+    #dernier choix effectué
+    self.last_choice = "NA"
 
     # Espace des actions : choix du pricing, (R+)^K normalisé
     self.action_space = spaces.Box(low = -1, high = 1, shape=(self.K,), dtype=np.float32)
@@ -64,7 +67,7 @@ class RMenv(gym.Env):
       C = self.demand[self.current_step]
       f_choice = choice(C,self.flights,self.verbose)
     except:
-      print("Choice error for step {}".format(self.current_step))
+      print("Choice error for client {} in list of {} clients".format(self.current_step+1,self.N))
       f_choice = -1
 
     if f_choice != -1:
@@ -96,6 +99,8 @@ class RMenv(gym.Env):
 
     f_choice, reward = self.get_choice(self.pricing)
 
+    self.last_choice = f_choice
+
     self.current_step += 1
 
     #On renvoie l'état des places vendues
@@ -105,7 +110,7 @@ class RMenv(gym.Env):
     info = {"Choix": f_choice , "Prix": reward}
 
     # Rescale reward ???
-    reward = reward / (self.max_price*self.N)
+    reward = reward / (self.max_price*self.total_seats)
 
     return observation, reward, done, info
 
@@ -130,8 +135,10 @@ class RMenv(gym.Env):
   
   
   def render(self, mode='human'):
-      print("Remplissage {}".format([f.seats - f.remaining for f in self.flights]))
-      print("Pricing {}".format(self.pricing))
+      print("Current step = {}".format(self.current_step-1))
+      print(">>> Pricing proposé = {} pour un prix max de {}".format(self.pricing,self.max_price))
+      print(">>> Choix effectué = {}".format(self.last_choice))
+      print(">>> Remplissage = {}".format([f.seats - f.remaining for f in self.flights]))
 
   def close (self):
     pass
