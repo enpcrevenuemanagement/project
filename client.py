@@ -81,7 +81,7 @@ def demand_uniform(time_horizon):
 
     list_of_clients=[]
     #On parcourt les jours de 1 à time_horizon
-    for day in range(1,time_horizon+1):
+    for day in range(0,time_horizon+1):
 
         t = day/time_horizon
         c = Client(t)
