@@ -68,7 +68,7 @@ def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
     
     for t in reversed(range(N)) : #nouvelle étape, on est en backward (à parcourir à l'envers)
         #création d'un client type pour cette étape (uniquement pour calculer la probabilité avec C.time_range = t)
-        ti=t/N
+        ti=t/(N-1)
         C = Client(ti)
         for state in states:  #états accessibles à l'étape t, toutes les paires possibles de vecteur sold
 
