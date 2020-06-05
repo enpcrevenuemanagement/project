@@ -1,6 +1,5 @@
 from vol import *
 from client import *
-from demand import *
 from utility import *
 from time import *
 import numpy 
@@ -24,13 +23,40 @@ def Pricing_options(prices, flights):
             pricing_options.append(list(pricing_option))
     return pricing_options
 
-#Fonction pour trouver l'index dans states à partir d'un state en remplacement d'une recherche d'index
-def find_index(state,flights):
-    seats = [flight.seats for flight in flights]
-    return int(sum([state[flights[i]]*np.prod(seats[i+1:]) for i in range(len(flights))]))
+#proba que le client C choisisse le vol V parmi une liste flights: SEULEMNT SIL  RESTE DES PLACES
+#v0 est l'utilité du choix 0
+def proba_c_v(C,V,flights,vols_pleins): 
+    n = len(flights)
+    #0 à n-1 pour les n vols et -1 si pas d'achat
+    choices = [-1]
+    u = [C.v0 / C.temp]
 
+    for i in range(n):
+        flight = flights[i]
+        if flight.remaining > 0:
+            u.append( utility(C,flight) / C.temp )
+            choices.append(i)
 
-def SDP(prices, flights, N, v0): #prix possibles, vols, nombre de clients
+    proba = np.exp( utility(C,V) / C.temp ) / sum(np.exp(u))
+    return proba
+
+#probabilité de ne chosisir aucun vol
+def proba_v0(C,flights,vols_pleins): 
+    n = len(flights)
+    #0 à n-1 pour les n vols et -1 si pas d'achat
+    choices = [-1]
+    u = [C.v0 / C.temp]
+
+    for i in range(n):
+        flight = flights[i]
+        if flight.remaining > 0:
+            u.append( utility(C,flight) / C.temp )
+            choices.append(i)
+
+    proba = np.exp( C.v0 / C.temp ) / sum(np.exp(u))
+    return proba
+
+def SDP(prices, flights, N): #prix possibles, vols, nombre de clients
     #définition des états possibles {v1:places vendues, v2:places vendues, ...}
     states = States(flights)
     #définition du pricing :  [p1,p2,...]
@@ -42,7 +68,7 @@ def SDP(prices, flights, N, v0): #prix possibles, vols, nombre de clients
     
     for t in reversed(range(N)) : #nouvelle étape, on est en backward (à parcourir à l'envers)
         #création d'un client type pour cette étape (uniquement pour calculer la probabilité avec C.time_range = t)
-        ti=t/N
+        ti=t/(N-1)
         C = Client(ti)
         for state in states:  #états accessibles à l'étape t, toutes les paires possibles de vecteur sold
 
@@ -65,11 +91,11 @@ def SDP(prices, flights, N, v0): #prix possibles, vols, nombre de clients
                     if f not in vols_pleins:
                         new_state = state.copy()
                         new_state[f] += 1 #nouvel état qui correspond à une place de plus vendue sur ce vol
-                        esp += proba_c_v(C,f,flights,vols_pleins,v0)*(f.price + F[t+1][states.index(new_state)])
+                        esp += proba_c_v(C,f,flights,vols_pleins)*(f.price + F[t+1][states.index(new_state)])
 
                 #cas où le client t ne choisit aucun vol
                 #p0(t) la proba associée, on reste dans le même état à t+1 et pas de bénéfices engendrés à t
-                esp += proba_v0(C,flights,vols_pleins,v0)*F[t+1][states.index(state)]
+                esp += proba_v0(C,flights,vols_pleins)*F[t+1][states.index(state)]
                 
     #nécessité de passer en backward : des qu'on calcule le nouvel état qui correspond à l'issue de la vente on doit savoir quel est le resultat de l'espérance
     #des gains de ce nouvel état de t+1 à n pour calculer l'espérance de gains globale de t à n.

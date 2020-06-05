@@ -6,32 +6,70 @@ from gym_env import *
 from vol import *
 
 # Initialisation des vols
-V1 = Vol((10,30),5)
-V2 = Vol((12,30),5)
-V3 = Vol((14,30),5)
-V4 = Vol((16,30),5)
-V5 = Vol((18,30),5)
-flights = [V1,V2,V3]
 
-# Nombre de clients dans la file (longueur d'un épisode)
-N = 20
+h1 = Horaire(14,0)
+h2 = Horaire(19,0)
+
+V1 = Vol(h1,10)
+V2 = Vol(h2,10)
+
+flights = [V1]
+
+# horizon temporel (longueur d'un épisode = nombre de clients si demande equirepartie)
+T = 1
+
+# Range d'exploration du prix
+max_price = 200
 
 # On construit l'environnement Gym
+env = RMenv(flights, T, max_price, verbose = 0)
+# On donne le constructeur de l'environnement Gym
+env_fn = lambda : env
 
 # If the environment don't follow the interface, an error will be thrown
 from stable_baselines.common.env_checker import check_env
-env = RMenv(flights, N)
 check_env(env, warn=True)
 
-# On donne le constructeur de l'environnement Gym : méthode 1
-env_fn = lambda : env
-
-# On donne le constructeur de l'environnement Gym : méthode 2 avec un vectorized env
-from stable_baselines.common.cmd_util import make_vec_env
-env_fn2 = lambda : make_vec_env(lambda: env, n_envs=1)
-
 # On run l'algo
-spinup.ddpg_tf1(env_fn, ac_kwargs={}, 
-seed=0, steps_per_epoch=4000, epochs=10, replay_size=1000000, gamma=0.99, polyak=0.995, 
-pi_lr=0.001, q_lr=0.001, batch_size=100, start_steps=10000, update_after=1000, update_every=50, 
-act_noise=0.1, num_test_episodes=1, max_ep_len=1000, logger_kwargs={}, save_freq=1)
+spinup.ddpg_tf1(env_fn, 
+
+""" Hyperparamètres à tuner"""
+# epochs
+epochs=100,
+steps_per_epoch=4000,
+
+# Num test episodes ??
+num_test_episodes=20,
+
+# Minibatch
+batch_size=100, 
+
+#Learning rates
+pi_lr=0.001, 
+q_lr=0.001, 
+
+# Bruit gaussien random de std dev = act_noise
+act_noise=0.1, 
+#Discount = 1 for finite horizon
+gamma=0.99, 
+#Uniform start steps
+start_steps=1000, 
+
+
+replay_size=1000000, 
+polyak=0.995, 
+
+#Update 
+update_after=1000, 
+update_every=50, 
+# Episode length (si done == false tout le temps)
+# en pratique doit etre supérieur à min(total seats, total clients)
+max_ep_len=1000, 
+
+logger_kwargs={}, 
+save_freq=1
+#actor_critic=<function mlp_actor_critic>
+#ac_kwargs={}, 
+#seed=0,
+
+)
