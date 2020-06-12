@@ -27,6 +27,7 @@ def profit(flights,prices,list_of_clients,pricing_policy):
     dic_sales = {}
     count = 0
     for client in list_of_clients:
+        count+=1
         state = states[state_index]
 
         print("Arrivée du client n°{} sur {}".format(step+1,N))
@@ -56,8 +57,8 @@ def profit(flights,prices,list_of_clients,pricing_policy):
             #print(">>>Le client choisit le vol {} d'utilité {}".format(flight_choice,math.exp(utility(client,flights[flight_choice]))))
             u = utility(client,flight)
             print(">>>Le client choisit le vol {} pour un prix de {} et une utilité de {}".format(flight_choice,flight.price,u))
-            dic_sales[count] = flight.price
-            count+=1
+            dic_sales[count] = [flight.price, flight.departure_time.hours, flight.remaining]
+            
             
             #On modifie l'objet Vol pour 
             flight.sell()
